@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.LoginController">
+   <children>
+      <Label layoutX="120.0" layoutY="24.0" text="Login">
+         <font>
+            <Font size="24.0" />
+         </font></Label>
+      <TextField fx:id="usernameField" layoutX="65.0" layoutY="118.0" prefHeight="26.0" prefWidth="170.0" promptText="Username" />
+      <PasswordField fx:id="passwordField" layoutX="65.0" layoutY="168.0" prefHeight="26.0" prefWidth="170.0" promptText="Password" />
+      <Button fx:id="loginButton" layoutX="64.0" layoutY="270.0" mnemonicParsing="false" onAction="#loginButton" prefHeight="26.0" prefWidth="170.0" text="Sign In" />
+      <Label layoutX="88.0" layoutY="64.0" text="Welcome to Nu Aneka!" />
+   </children>
+</AnchorPane>
