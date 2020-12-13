@@ -5,11 +5,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class CustomerController {
+public class CashierController {
 
-    public void addCustomerButton(){
+    public void addSalesButton(){
         try{
-            FXMLLoader loader= new FXMLLoader(getClass().getResource("AddCustomer.fxml"));
+            FXMLLoader loader= new FXMLLoader(getClass().getResource("AddSales.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();

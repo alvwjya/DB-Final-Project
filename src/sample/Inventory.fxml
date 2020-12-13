@@ -4,10 +4,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: sienna;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CustomerController">
+<AnchorPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: sienna;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.InventoryController">
     <children>
         <TableView layoutX="50.0" layoutY="88.0" prefHeight="450.0" prefWidth="900.0" />
-        <Button layoutX="50.0" layoutY="568.0" mnemonicParsing="false" onAction="#addCustomerButton" prefHeight="40.0" prefWidth="155.0" style="-fx-background-color: limegreen;" text="ADD CUSTOMER">
+        <Button layoutX="50.0" layoutY="568.0" mnemonicParsing="false" onAction="#newSupplyButton" prefHeight="40.0" prefWidth="155.0" style="-fx-background-color: limegreen;" text="NEW SUPPLY">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
@@ -17,12 +17,12 @@
                 <Font name="Arial" size="14.0" />
             </font>
         </Button>
-        <Button layoutX="678.0" layoutY="568.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="EDIT">
+        <Button layoutX="678.0" layoutY="568.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="REFRESH">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Button>
-        <Label layoutX="50.0" layoutY="42.0" text="CUSTOMER DETAILS" textFill="WHITE">
+        <Label layoutX="50.0" layoutY="42.0" text="INVENTORY" textFill="WHITE">
             <font>
                 <Font name="Arial" size="24.0" />
             </font>
