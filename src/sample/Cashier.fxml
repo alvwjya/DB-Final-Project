@@ -6,32 +6,42 @@
 
 <AnchorPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: sienna;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CashierController">
     <children>
-        <TableView layoutX="50.0" layoutY="88.0" prefHeight="450.0" prefWidth="520.0" />
+        <TableView layoutX="50.0" layoutY="138.0" prefHeight="400.0" prefWidth="900.0" />
         <Button layoutX="824.0" layoutY="568.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" style="-fx-background-color: red;" text="DELETE">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Button>
-        <Label layoutX="50.0" layoutY="42.0" text="SALES" textFill="WHITE">
+        <Label layoutX="50.0" layoutY="42.0" text="CASHIER" textFill="WHITE">
             <font>
                 <Font name="Arial" size="24.0" />
             </font>
         </Label>
-        <TableView layoutX="590.0" layoutY="88.0" prefHeight="450.0" prefWidth="360.0" />
-        <Label layoutX="590.0" layoutY="42.0" text="SALES DETAILS" textFill="WHITE">
-            <font>
-                <Font name="Arial" size="24.0" />
-            </font>
-        </Label>
-      <Button layoutX="50.0" layoutY="568.0" mnemonicParsing="false" onAction="#addSalesButton" prefHeight="40.0" prefWidth="125.0" style="-fx-background-color: limegreen;" text="ADD SALES">
+      <TextField layoutX="50.0" layoutY="91.0" prefHeight="26.0" prefWidth="150.0" promptText="Customer ID" />
+      <TextField layoutX="479.0" layoutY="91.0" prefHeight="26.0" prefWidth="175.0" promptText="Product ID" />
+      <TextField layoutX="666.0" layoutY="91.0" prefHeight="26.0" prefWidth="100.0" promptText="Qty." />
+      <Button layoutX="824.0" layoutY="84.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="ADD">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Button>
-      <Button layoutX="678.0" layoutY="568.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="EDIT">
+      <TextField layoutX="126.0" layoutY="574.0" prefHeight="26.0" prefWidth="160.0" />
+      <Label layoutX="50.0" layoutY="577.0" text="Subtotal" textFill="WHITE">
          <font>
-            <Font name="Arial" size="14.0" />
+            <Font name="Arial" size="18.0" />
          </font>
-      </Button>
+      </Label>
+      <TextField layoutX="358.0" layoutY="575.0" prefHeight="26.0" prefWidth="160.0" />
+      <Label layoutX="317.0" layoutY="577.0" text="Pay" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <TextField layoutX="622.0" layoutY="575.0" prefHeight="26.0" prefWidth="160.0" />
+      <Label layoutX="549.0" layoutY="577.0" text="Change" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

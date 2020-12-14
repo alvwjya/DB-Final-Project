@@ -17,7 +17,7 @@
                 <Font name="Arial" size="14.0" />
             </font>
         </Button>
-        <Button layoutX="678.0" layoutY="568.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="EDIT">
+        <Button layoutX="678.0" layoutY="568.0" mnemonicParsing="false" onAction="#editButton" prefHeight="40.0" prefWidth="125.0" text="EDIT">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
@@ -27,5 +27,10 @@
                 <Font name="Arial" size="24.0" />
             </font>
         </Label>
+      <Button layoutX="824.0" layoutY="36.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="REFRESH">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>

@@ -9,12 +9,26 @@ public class SupplierController {
 
     public void addSupplierButton(){
         try{
-            FXMLLoader loader= new FXMLLoader(getClass().getResource("NewSupply.fxml"));
+            FXMLLoader loader= new FXMLLoader(getClass().getResource("SupplierAdd.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Nu Aneka");
+            stage.setTitle("Nu Aneka-New Supplier");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void editButton(){
+        try{
+            FXMLLoader loader= new FXMLLoader(getClass().getResource("SupplierEdit.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Nu Aneka-Edit Supplier");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
