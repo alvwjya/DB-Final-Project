@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: sienna;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CustomerController">
     <children>
-        <TableView layoutX="50.0" layoutY="88.0" prefHeight="450.0" prefWidth="900.0" />
+        <TableView fx:id="customerTable" layoutX="50.0" layoutY="88.0" prefHeight="450.0" prefWidth="900.0" />
         <Button layoutX="50.0" layoutY="568.0" mnemonicParsing="false" onAction="#addCustomerButton" prefHeight="40.0" prefWidth="155.0" style="-fx-background-color: limegreen;" text="ADD CUSTOMER">
             <font>
                 <Font name="Arial" size="14.0" />
@@ -27,10 +27,10 @@
                 <Font name="Arial" size="24.0" />
             </font>
         </Label>
-      <Button layoutX="824.0" layoutY="36.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="REFRESH">
-         <font>
-            <Font name="Arial" size="14.0" />
-         </font>
-      </Button>
+        <Button layoutX="824.0" layoutY="36.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="REFRESH">
+            <font>
+                <Font name="Arial" size="14.0" />
+            </font>
+        </Button>
     </children>
 </AnchorPane>

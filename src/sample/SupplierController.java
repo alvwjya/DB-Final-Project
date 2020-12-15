@@ -1,11 +1,25 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-public class SupplierController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class SupplierController implements Initializable {
+
+    ObservableList<ModelTableSupplier> oblist = FXCollections.observableArrayList();
+    @FXML
+    private TableView<ModelTableSupplier> supplierTable;
 
     public void addSupplierButton(){
         try{
@@ -34,4 +48,33 @@ public class SupplierController {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        oblist.add(new ModelTableSupplier(1, "KOKO", "IJ", "ju", "beenuse"));
+
+        TableColumn idCol = new TableColumn("ID");
+        idCol.setMinWidth(100);
+        idCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableSupplier, Integer>("supplierId"));
+        TableColumn nameCol = new TableColumn("Name");
+        nameCol.setMinWidth(200);
+        nameCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableSupplier, String>("supplierName"));
+        TableColumn addressCol = new TableColumn("Address");
+        addressCol.setMinWidth(250);
+        addressCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableSupplier, String>("supplierAddress"));
+        TableColumn cityCol = new TableColumn("City");
+        cityCol.setMinWidth(150);
+        cityCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableSupplier, String>("city"));
+        TableColumn contactCol = new TableColumn("Contact");
+        contactCol.setMinWidth(190);
+        contactCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableSupplier, String>("supplierContact"));
+        supplierTable.setItems(oblist);
+        supplierTable.getColumns().addAll(idCol, nameCol, addressCol, cityCol, contactCol);
+    }
+
 }

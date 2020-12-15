@@ -4,31 +4,31 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: coral;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: coral;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.HomeController">
    <children>
       <TabPane layoutY="121.0" prefHeight="680.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Cashier">
+          <Tab fx:id="cashier" text="Cashier">
             <content>
                 <fx:include source="Cashier.fxml" />
             </content>
           </Tab>
-          <Tab text="Customer">
+          <Tab fx:id="customer" text="Customer">
             <content>
                 <fx:include source="Customer.fxml" />
             </content>
           </Tab>
-            <Tab text="Supplier">
+            <Tab fx:id="supplier" text="Supplier">
                 <content>
                     <fx:include source="Supplier.fxml" />
                 </content>
             </Tab>
-            <Tab text="Inventory">
+            <Tab fx:id="inventory" text="Inventory">
                 <content>
                     <fx:include source="Inventory.fxml" />
                 </content>
             </Tab>
-            <Tab text="Finance">
+            <Tab fx:id="finance" text="Finance">
                 <content>
                     <fx:include source="Finance.fxml" />
                 </content>

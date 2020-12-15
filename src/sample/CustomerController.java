@@ -1,11 +1,25 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-public class CustomerController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class CustomerController implements Initializable {
+
+    ObservableList<ModelTableCustomer> oblist = FXCollections.observableArrayList();
+    @FXML
+    private TableView<ModelTableCustomer> customerTable;
 
     public void addCustomerButton(){
         try{
@@ -35,4 +49,31 @@ public class CustomerController {
         }
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        oblist.add(new ModelTableCustomer(1, "KOKO", "IJ", "ju", "binus"));
+
+        TableColumn idCol = new TableColumn("ID");
+        idCol.setMinWidth(100);
+        idCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableCustomer, Integer>("customerId"));
+        TableColumn nameCol = new TableColumn("Name");
+        nameCol.setMinWidth(200);
+        nameCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableCustomer, String>("customerName"));
+        TableColumn addressCol = new TableColumn("Address");
+        addressCol.setMinWidth(250);
+        addressCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableCustomer, String>("customerAddress"));
+        TableColumn cityCol = new TableColumn("City");
+        cityCol.setMinWidth(150);
+        cityCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableCustomer, String>("city"));
+        TableColumn contactCol = new TableColumn("Contact");
+        contactCol.setMinWidth(190);
+        contactCol.setCellValueFactory(
+                new PropertyValueFactory<ModelTableCustomer, String>("customerContact"));
+        customerTable.setItems(oblist);
+        customerTable.getColumns().addAll(idCol, nameCol, addressCol, cityCol, contactCol);
+    }
 }

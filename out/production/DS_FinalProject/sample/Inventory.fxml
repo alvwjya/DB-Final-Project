@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: sienna;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.InventoryController">
     <children>
-        <TableView layoutX="50.0" layoutY="88.0" prefHeight="450.0" prefWidth="900.0" />
+        <TableView fx:id="inventoryTable" layoutX="50.0" layoutY="88.0" prefHeight="450.0" prefWidth="900.0" />
         <Button layoutX="50.0" layoutY="568.0" mnemonicParsing="false" onAction="#newSupplyButton" prefHeight="40.0" prefWidth="155.0" style="-fx-background-color: limegreen;" text="NEW SUPPLY">
             <font>
                 <Font name="Arial" size="14.0" />
