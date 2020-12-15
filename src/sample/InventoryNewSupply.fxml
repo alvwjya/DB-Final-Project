@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sample.InventoryNewSupplyController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.InventoryNewSupplyController">
+    <children>
+        <Label layoutX="241.0" layoutY="14.0" text="NEW SUPPLY">
+            <font>
+                <Font name="Arial" size="18.0" />
+            </font>
+        </Label>
+        <Button layoutX="270.0" layoutY="350.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="60.0" text="SAVE" />
+        <TextField fx:id="supplierIdField" layoutX="52.0" layoutY="56.0" prefHeight="26.0" prefWidth="195.0" promptText="Supplier ID" />
+        <TextField fx:id="productIdField" layoutX="52.0" layoutY="109.0" prefHeight="26.0" prefWidth="195.0" promptText="Product ID" />
+      <TextField fx:id="priceField" layoutX="351.0" layoutY="109.0" prefHeight="26.0" prefWidth="195.0" promptText="Price" />
+      <TextField fx:id="qtyField" layoutX="351.0" layoutY="56.0" prefHeight="26.0" prefWidth="195.0" promptText="Qty." />
+    </children>
 </AnchorPane>

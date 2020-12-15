@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sample.InventoryEditController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.InventoryEditController">
+    <children>
+        <Label layoutX="232.0" layoutY="14.0" text="EDIT PRODUCT">
+            <font>
+                <Font name="Arial" size="18.0" />
+            </font>
+        </Label>
+        <Button layoutX="270.0" layoutY="350.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="60.0" text="SAVE" />
+        <TextField fx:id="productNameField" layoutX="52.0" layoutY="109.0" prefHeight="26.0" prefWidth="195.0" promptText="Product Name" />
+        <TextField fx:id="priceField" layoutX="52.0" layoutY="165.0" prefHeight="26.0" prefWidth="195.0" promptText="Price" />
+      <ComboBox fx:id="categoryComboBox" layoutX="319.0" layoutY="57.0" prefWidth="150.0" promptText="Category" />
+    </children>
 </AnchorPane>
