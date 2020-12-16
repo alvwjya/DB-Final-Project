@@ -18,6 +18,8 @@ import java.util.ResourceBundle;
 
 public class SupplierController implements Initializable {
 
+    public int supplierId;
+
     ObservableList<ModelTableSupplier> oblist = FXCollections.observableArrayList();
     @FXML
     private TableView<ModelTableSupplier> supplierTable;
@@ -36,58 +38,45 @@ public class SupplierController implements Initializable {
         }
     }
 
+    public void getSupplierId(){
+        ModelTableSupplier supplier = supplierTable.getSelectionModel().getSelectedItem();
+        supplierId = supplier.getSupplierId();
+        System.out.println("THIS IS BEFORE " + supplierId); //Check Only
+
+    }
+
     public void editButton(){
         try{
             FXMLLoader loader= new FXMLLoader(getClass().getResource("SupplierEdit.fxml"));
             Parent root = loader.load();
-
+            SupplierEditController sController = loader.getController();
+            sController.setSupplierId(supplierId);
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nu Aneka-Edit Supplier");
             stage.show();
-
-
-
-
-
-            ModelTableSupplier movie = supplierTable.getSelectionModel().getSelectedItem();
-            String hehe = movie.getSupplierAddress();
-            System.out.println(hehe);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void showTable(){
+        // add code + query here to fill the table with supplier details
+    }
 
-    //TESTNYA ALVIAN
-    public int hehe(){
-        for (int i = 0; i < supplierTable.getItems().size(); i++) {
-            if (supplierTable.getItems().get(i).getSupplierId() == 3) {
-                return i;
-            }
-        }
-        return 0;
-    } //STOP DISINI DULU
+    public void refreshButton(){
+        supplierTable.getItems().clear();
+        supplierTable.getColumns().clear();
+        showTable();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        oblist.add(new ModelTableSupplier(1, "KOKO", "IJ", "ju", "beenuse"));
-        oblist.add(new ModelTableSupplier(2, "KOKO", "IJ", "ju", "beenuse"));
-        oblist.add(new ModelTableSupplier(3, "KOKO", "IJ", "ju", "beenuse"));
-
-
-        //INI JUGA TEST ALVIAN
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                supplierTable.requestFocus();
-                supplierTable.getSelectionModel().select(hehe());
-                supplierTable.getFocusModel().focus(hehe());
-
-
-            }
-        }); //UDH SAMPE SINI
+        // Test Only
+        oblist.add(new ModelTableSupplier(1, "Zebra", "Jl. Kartini", "Bekasi", "zebra@gmail.com"));
+        oblist.add(new ModelTableSupplier(2, "PT. ANEKA", "Jl. Sudirman", "Jakarta", "085722895406"));
+        oblist.add(new ModelTableSupplier(3, "TOKO SELAMAT", "Jln. Buah Batu", "Bogor", "tokoselamat@ymail.com"));
 
 
 

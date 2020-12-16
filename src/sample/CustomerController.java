@@ -17,6 +17,8 @@ import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
 
+    public int customerId;
+
     ObservableList<ModelTableCustomer> oblist = FXCollections.observableArrayList();
     @FXML
     private TableView<ModelTableCustomer> customerTable;
@@ -35,11 +37,18 @@ public class CustomerController implements Initializable {
         }
     }
 
+    public void getCustomerId(){
+        ModelTableCustomer customer = customerTable.getSelectionModel().getSelectedItem();
+        customerId = customer.getCustomerId();
+        System.out.println("THIS IS BEFORE "  + customerId); //Check Only
+    }
+
     public void editButton(){
         try{
             FXMLLoader loader= new FXMLLoader(getClass().getResource("CustomerEdit.fxml"));
             Parent root = loader.load();
-
+            CustomerEditController cController = loader.getController();
+            cController.setCustomerId(customerId);
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nu Aneka-Edit Customer");
@@ -47,6 +56,16 @@ public class CustomerController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void showTable(){
+        // add code + query here to fill the table with customer details
+    }
+
+    public void refreshButton(){
+        customerTable.getItems().clear();
+        customerTable.getColumns().clear();
+        showTable();
     }
 
     @Override

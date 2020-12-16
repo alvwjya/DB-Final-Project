@@ -4,16 +4,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.InventoryAddNewItemController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.InventoryNewItemController">
     <children>
-        <Label layoutX="241.0" layoutY="14.0" text="NEW SUPPLY">
+        <Label layoutX="255.0" layoutY="14.0" text="NEW ITEM">
             <font>
                 <Font name="Arial" size="18.0" />
             </font>
         </Label>
-        <Button layoutX="270.0" layoutY="350.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="60.0" text="SAVE" />
-        <TextField fx:id="productNameField" layoutX="52.0" layoutY="109.0" prefHeight="26.0" prefWidth="195.0" promptText="Product Name" />
-        <TextField fx:id="priceField" layoutX="52.0" layoutY="165.0" prefHeight="26.0" prefWidth="195.0" promptText="Price" />
-        <ComboBox fx:id="categoryComboBox" layoutX="319.0" layoutY="57.0" prefWidth="150.0" promptText="Category" />
+        <Button layoutX="270.0" layoutY="350.0" mnemonicParsing="false" onAction="#saveButton" prefHeight="35.0" prefWidth="60.0" text="SAVE" />
+        <TextField fx:id="productNameField" layoutX="30.0" layoutY="159.0" prefHeight="26.0" prefWidth="195.0" promptText="Product Name" />
+        <TextField fx:id="priceField" layoutX="30.0" layoutY="215.0" prefHeight="26.0" prefWidth="195.0" promptText="Price" />
+      <TableView fx:id="categoryTable" layoutX="271.0" layoutY="62.0" onMouseClicked="#getCategory" prefHeight="266.0" prefWidth="299.0" />
     </children>
 </AnchorPane>

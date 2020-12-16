@@ -11,10 +11,10 @@
             <Font name="Arial" size="18.0" />
          </font>
       </Label>
-      <Button layoutX="270.0" layoutY="350.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="60.0" text="SAVE" />
+      <Button layoutX="270.0" layoutY="350.0" mnemonicParsing="false" onAction="#saveButton" prefHeight="35.0" prefWidth="60.0" text="SAVE" />
       <TextField fx:id="customerNameField" layoutX="52.0" layoutY="56.0" prefHeight="26.0" prefWidth="195.0" promptText="Name" />
       <TextArea fx:id="customerAddressField" layoutX="337.0" layoutY="56.0" prefHeight="80.0" prefWidth="210.0" promptText="Address" />
       <TextField fx:id="customerContactField" layoutX="52.0" layoutY="109.0" prefHeight="26.0" prefWidth="195.0" promptText="Contact" />
-      <TableView fx:id="cityTable" layoutX="52.0" layoutY="150.0" prefHeight="190.0" prefWidth="495.0" />
+      <TableView fx:id="cityTable" layoutX="52.0" layoutY="150.0" onMouseClicked="#getCity" prefHeight="190.0" prefWidth="495.0" />
    </children>
 </AnchorPane>

@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class InventoryController implements Initializable {
+    public int productId;
 
     ObservableList<ModelTableInventory> oblist = FXCollections.observableArrayList();
     @FXML
@@ -53,7 +54,8 @@ public class InventoryController implements Initializable {
         try{
             FXMLLoader loader= new FXMLLoader(getClass().getResource("InventoryEdit.fxml"));
             Parent root = loader.load();
-
+            InventoryEditController iController = loader.getController();
+            iController.setProductId(productId);
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nu Aneka-Edit Item");
@@ -61,6 +63,22 @@ public class InventoryController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void getProductId(){
+        ModelTableInventory inventory = inventoryTable.getSelectionModel().getSelectedItem();
+        productId = inventory.getProductId();
+        System.out.println("THIS IS BEFORE " + productId); //Check Only
+    }
+
+    public void showTable(){
+        // add code + query here to fill the table with product details
+    }
+
+    public void refreshButton(){
+        inventoryTable.getItems().clear();
+        inventoryTable.getColumns().clear();
+        showTable();
     }
 
     @Override

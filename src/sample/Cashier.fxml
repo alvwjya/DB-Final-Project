@@ -7,7 +7,7 @@
 <AnchorPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: sienna;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CashierController">
     <children>
         <TableView fx:id="cashierTable" layoutX="50.0" layoutY="138.0" prefHeight="400.0" prefWidth="900.0" />
-        <Button fx:id="deleteButton" layoutX="824.0" layoutY="568.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" style="-fx-background-color: red;" text="DELETE">
+        <Button fx:id="payButton" layoutX="824.0" layoutY="568.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" style="-fx-background-color: limegreen;" text="PAY">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
@@ -18,14 +18,14 @@
             </font>
         </Label>
       <TextField fx:id="customerIdField" layoutX="50.0" layoutY="91.0" prefHeight="26.0" prefWidth="150.0" promptText="Customer ID" />
-      <TextField fx:id="productIdField" layoutX="479.0" layoutY="91.0" prefHeight="26.0" prefWidth="175.0" promptText="Product ID" />
-      <TextField fx:id="qtyField" layoutX="666.0" layoutY="91.0" prefHeight="26.0" prefWidth="100.0" promptText="Qty." />
+      <TextField fx:id="productIdField" layoutX="519.0" layoutY="91.0" prefHeight="26.0" prefWidth="175.0" promptText="Product ID" />
+      <TextField fx:id="qtyField" layoutX="706.0" layoutY="91.0" prefHeight="26.0" prefWidth="100.0" promptText="Qty." />
       <Button fx:id="addButton" layoutX="824.0" layoutY="84.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="ADD">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Button>
-      <TextField fx:id="subtotalField" layoutX="126.0" layoutY="574.0" prefHeight="26.0" prefWidth="160.0" />
+      <TextField fx:id="subtotalField" editable="false" layoutX="126.0" layoutY="574.0" prefHeight="26.0" prefWidth="160.0" />
       <Label layoutX="50.0" layoutY="577.0" text="Subtotal" textFill="WHITE">
          <font>
             <Font name="Arial" size="18.0" />
@@ -37,11 +37,16 @@
             <Font name="Arial" size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="changeField" layoutX="622.0" layoutY="575.0" prefHeight="26.0" prefWidth="160.0" />
+      <TextField fx:id="changeField" editable="false" layoutX="622.0" layoutY="575.0" prefHeight="26.0" prefWidth="160.0" />
       <Label layoutX="549.0" layoutY="577.0" text="Change" textFill="WHITE">
          <font>
             <Font name="Arial" size="18.0" />
          </font>
       </Label>
+      <Button fx:id="newSalesButton" layoutX="221.0" layoutY="84.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="NEW SALES">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>
