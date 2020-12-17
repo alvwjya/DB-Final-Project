@@ -20,14 +20,40 @@ import java.util.ResourceBundle;
 public class CashierController implements Initializable {
 
     public TextField customerIdField, productIdField, qtyField, changeField, payField, subtotalField;
-    public Button addButton, deleteButton;
+    public Button addButton;
+    public String salesId;
+    public String subtotal;
 
     ObservableList<ModelTableCashier> oblist = FXCollections.observableArrayList();
     @FXML
     private TableView<ModelTableCashier> cashierTable;
 
+
+    public void newSalesButton(){
+        // add query yg mskin customerId, sama "now" date, trus return "salesId"
+        // nanti set variable "salesId" dari query tadi.
+        // ini link reference: https://stackoverflow.com/questions/11442926/return-a-value-from-an-insert-query-in-mysql
+    }
+
+    public void AddButton(){
+        // tambahin query buat mskin item nya ke "SALES DETAILS" table di database
+        // yg dimasukin salesId, productId
+        // trus add query yg return harga, and total harga (harga*qty)
+        // and also bikin query yg return sum dari totalnya ke subtotal
+    }
+
+    public void payButton(){
+        // bikin query yg mskin "paid" amount
+    }
+
+    public void showTable(){
+        // add query yg show itemnya apa aja dari table "sales details"
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        showTable();
 
         TableColumn idCol = new TableColumn("No.");
         idCol.setMinWidth(50);

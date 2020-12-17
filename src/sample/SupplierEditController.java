@@ -61,14 +61,14 @@ public class SupplierEditController implements Initializable {
 
     public int getCityIndex(){
         for (int i = 0; i < cityTable.getItems().size(); i++) {
-            if (cityTable.getItems().get(i).getCityId() == 1) { // <- ini '==' nya diliat dari database, bikin query yg return cityId customer
+            if (cityTable.getItems().get(i).getCityId() == 1) { // <- ini '==' nya diliat dari database, bikin query yg return cityId nya supplier
                 return i;
             }
         }
         return 0;
     }
 
-    public void preselectCity(){
+    public void preselectCityAndOthers(){
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -77,6 +77,10 @@ public class SupplierEditController implements Initializable {
                 cityTable.getFocusModel().focus(getCityIndex());
             }
         });
+        // add query yg return name, contact, address supplier dari supplierId yg udh diselect
+        //supplierNameField.setText(); <- ini buat set name field
+        //supplierContactField.setText(); <- ini buat set conact field
+        //supplierAddressField.setText(); <- ini buat set address field
     }
 
 
@@ -89,6 +93,8 @@ public class SupplierEditController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         oblist.add(new ModelTableCity(1, "Bekasi", "JAWA BARAT"));
         oblist.add(new ModelTableCity(2, "Bogor", "JAWA BARAT"));
+        showTable();
+        preselectCityAndOthers();
 
         System.out.println(oblist);
         TableColumn movCol = new TableColumn("City");

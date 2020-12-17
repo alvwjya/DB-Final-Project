@@ -73,7 +73,7 @@ public class InventoryEditController implements Initializable {
         return 0;
     }
 
-    public void preselectCategory(){
+    public void preselectCategoryAndOthers(){
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -82,12 +82,18 @@ public class InventoryEditController implements Initializable {
                 categoryTable.getFocusModel().focus(getCategoryIndex());
             }
         });
+
+        // Add query yg return product name, sama price dari productId
+        //productNameField.setText(); <- Ini buat set product name textfield
+        //priceField.setText(); <- Ini buat set price textfield
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        oblist.add(new ModelTableCategory(1, "Ballpoint"));
+        oblist.add(new ModelTableCategory(2, "Drawing Book"));
         showTable();
-        preselectCategory();
+        preselectCategoryAndOthers();
 
         TableColumn idCol = new TableColumn("ID");
         idCol.setMinWidth(50);

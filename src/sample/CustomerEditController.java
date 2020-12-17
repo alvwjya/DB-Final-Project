@@ -71,7 +71,7 @@ public class CustomerEditController implements Initializable {
             return 0;
     }
 
-    public void preselectCity(){
+    public void preselectCityAndOthers(){
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -80,6 +80,11 @@ public class CustomerEditController implements Initializable {
                 cityTable.getFocusModel().focus(getCityIndex());
             }
         });
+
+        //Add query yg return customer address, name, and contact berdasarkan customerId yg udh dipilih.
+        //customerAddressField.setText(); <- ini buat set address field
+        //customerContactField.setText(); <- ini buat set contact field
+        //customerNameField.setText(); <- ini buat set name field
     }
 
 
@@ -90,7 +95,7 @@ public class CustomerEditController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        preselectCity();
+        preselectCityAndOthers();
 
         // This is for test only
         oblist.add(new ModelTableCity(1, "Bandung", "JAWA BARAT"));

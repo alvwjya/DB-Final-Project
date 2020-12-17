@@ -13,8 +13,14 @@ import java.util.ResourceBundle;
 
 public class FinanceController implements Initializable {
 
+    public String date;
+
+    //Ini buat table "FINANCES"
     ObservableList<ModelTableFinances> oblist1 = FXCollections.observableArrayList();
+
+    //Ini buat table "EXPENSES DETAILS"
     ObservableList<ModelTableExpensesDetails> oblist2 = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableFinances> financesTable;
 
@@ -22,8 +28,23 @@ public class FinanceController implements Initializable {
     private TableView<ModelTableExpensesDetails> expensesDetailsTable;
 
 
+    public void showFinancesTable(){
+        // add query buat isi table "FINANCES"
+    }
+
+    public void getFinancesDetails(){
+        ModelTableFinances customer = financesTable.getSelectionModel().getSelectedItem();
+        date = customer.getDate();
+    }
+
+    public void showExpensesDetails(){
+        // add query buat isi table "EXPENSES DETAILS" berdasarkan date yg udh di pilih dari "FINANCES" table
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        showFinancesTable();
         TableColumn dateCol = new TableColumn("Date");
         dateCol.setMinWidth(130);
         dateCol.setCellValueFactory(
