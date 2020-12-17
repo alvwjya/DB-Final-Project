@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: sienna;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.FinanceController">
     <children>
-        <TableView fx:id="financesTable" layoutX="50.0" layoutY="88.0" prefHeight="450.0" prefWidth="440.0" />
+        <TableView fx:id="financesTable" layoutX="50.0" layoutY="88.0" onMouseClicked="#getFinancesDetails" prefHeight="450.0" prefWidth="440.0" />
         <Button layoutX="824.0" layoutY="568.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="REFRESH">
             <font>
                 <Font name="Arial" size="14.0" />
