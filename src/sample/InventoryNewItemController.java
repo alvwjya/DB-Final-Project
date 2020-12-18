@@ -11,11 +11,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class InventoryNewItemController implements Initializable {
     public TextField productNameField, priceField;
     public String selectedCategory;
+    Connection connect = new Connection();
 
     ObservableList<ModelTableCategory> oblist = FXCollections.observableArrayList();
     @FXML
@@ -26,7 +30,7 @@ public class InventoryNewItemController implements Initializable {
         selectedCategory = String.valueOf(category.getCategoryId());
     }
 
-    public void saveButton(){
+    public void saveButton() throws SQLException {
         if (productNameField.getText().isEmpty() || priceField.getText().isEmpty() || selectedCategory.equals("")){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Something Wrong!");
@@ -35,7 +39,9 @@ public class InventoryNewItemController implements Initializable {
             alert.show();
         }
         else{
-            // add query here to add product
+            getCategory();
+            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Inventory (productName, categoryId, productPrice) VALUES ('" + productNameField.getText() + "', " + selectedCategory + ", " + priceField.getText() + ");");
+            prepStat.executeUpdate();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
@@ -51,7 +57,16 @@ public class InventoryNewItemController implements Initializable {
 
     public void showTable(){
         // add code + query here to fill the table with categoryId, category.
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM Category;");
+            ResultSet rs = prepStat.executeQuery();
 
+            while (rs.next()) {
+                oblist.add(new ModelTableCategory(rs.getInt("categoryId"), rs.getString("category")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

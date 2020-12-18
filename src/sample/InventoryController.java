@@ -13,10 +13,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class InventoryController implements Initializable {
     public int productId;
+    Connection connect = new Connection();
 
     ObservableList<ModelTableInventory> oblist = FXCollections.observableArrayList();
     @FXML
@@ -72,7 +76,16 @@ public class InventoryController implements Initializable {
     }
 
     public void showTable(){
-        // add code + query here to fill the table with product details
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT productId, productName, productQty, category, productPrice FROM Inventory, Category WHERE Inventory.categoryId = Category.categoryId;");
+            ResultSet rs = prepStat.executeQuery();
+
+            while (rs.next()) {
+                oblist.add(new ModelTableInventory(rs.getInt("productId"), rs.getString("productName"), rs.getString("productQty"), rs.getString("category"), rs.getString("productPrice")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void refreshButton(){

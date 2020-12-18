@@ -9,6 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class CustomerEditController implements Initializable {
@@ -17,6 +20,7 @@ public class CustomerEditController implements Initializable {
     public TextArea customerAddressField;
     public String selectedCityId;
     public int customerId;
+    Connection connect = new Connection();
 
     ObservableList<ModelTableCity> oblist = FXCollections.observableArrayList();
     @FXML
@@ -31,7 +35,7 @@ public class CustomerEditController implements Initializable {
         this.customerId = customerId;
     }
 
-    public void saveButton(){
+    public void saveButton() throws SQLException {
 
         System.out.println("THIS IS AFTER " + customerId); //Check Only
         if (customerAddressField.getText().isEmpty() || customerContactField.getText().isEmpty() || customerNameField.getText().isEmpty()){
@@ -43,8 +47,9 @@ public class CustomerEditController implements Initializable {
         }
         else{
             // add query here to edit customer, customernya bisa diambil dari variable customerId, trus yg bisa diganti nama, address, contact, city
-
             getCity();
+            PreparedStatement prepStat = connect.getPrepStat("UPDATE Customer SET customerName = '" + customerNameField.getText() + "', customerAddress = '" + customerAddressField.getText() + "', customerContact = '" + customerContactField.getText() + "', cityId = " + selectedCityId + " WHERE customerId = " + customerId + ";");
+            prepStat.executeUpdate();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
@@ -71,7 +76,7 @@ public class CustomerEditController implements Initializable {
             return 0;
     }
 
-    public void preselectCityAndOthers(){
+    public void preselectCityAndOthers() throws SQLException {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -85,17 +90,36 @@ public class CustomerEditController implements Initializable {
         //customerAddressField.setText(); <- ini buat set address field
         //customerContactField.setText(); <- ini buat set contact field
         //customerNameField.setText(); <- ini buat set name field
+        PreparedStatement prepStat = connect.getPrepStat("SELECT customerName, customerAddress, customerContact FROM Customer WHERE customerId = " + customerId + ";");
+        ResultSet rs = prepStat.executeQuery();
+        customerNameField.setText(rs.getString("customerName"));
+        customerAddressField.setText(rs.getString("customerAddress"));
+        customerContactField.setText(rs.getString("customerContact"));
     }
 
 
     public void showTable(){
         // add code + query here to fill the table with cityId, city, and province.
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT cityId, city, province FROM City, Province WHERE City.provinceId = Province.provinceId;");
+            ResultSet rs = prepStat.executeQuery();
+
+            while (rs.next()) {
+                oblist.add(new ModelTableCity(rs.getInt("cityId"), rs.getString("city"), rs.getString("province")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        preselectCityAndOthers();
+        try {
+            preselectCityAndOthers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         // This is for test only
         oblist.add(new ModelTableCity(1, "Bandung", "JAWA BARAT"));

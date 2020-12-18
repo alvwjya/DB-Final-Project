@@ -8,6 +8,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class CustomerAddController implements Initializable {
@@ -15,6 +18,7 @@ public class CustomerAddController implements Initializable {
     public TextField customerNameField, customerContactField;
     public TextArea customerAddressField;
     public String selectedCity;
+    public Connection connect = new Connection();
 
     ObservableList<ModelTableCity> oblist = FXCollections.observableArrayList();
     @FXML
@@ -25,7 +29,7 @@ public class CustomerAddController implements Initializable {
         selectedCity = String.valueOf(city.getCityId());
     }
 
-    public void saveButton(){
+    public void saveButton() throws SQLException {
 
 
         if (customerAddressField.getText().isEmpty() || customerContactField.getText().isEmpty() || customerNameField.getText().isEmpty() || (selectedCity.equals(""))){
@@ -37,6 +41,8 @@ public class CustomerAddController implements Initializable {
         }
         else{
             // add query here to add customer
+            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Customer (customerName, customerAddress, cityId, customerContact) VALUES ('" + customerNameField.getText() + "', '" + customerAddressField.getText() + "', " + selectedCity + ", '" + customerContactField.getText() + "');");
+            prepStat.executeUpdate();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
@@ -56,6 +62,16 @@ public class CustomerAddController implements Initializable {
 
     public void showTable(){
         // add code + query here to fill the table with cityId, city, and province.
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT cityId, city, province FROM City, Province WHERE City.provinceId = Province.provinceId;");
+            ResultSet rs = prepStat.executeQuery();
+
+            while (rs.next()) {
+                oblist.add(new ModelTableCity(rs.getInt("cityId"), rs.getString("city"), rs.getString("province")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

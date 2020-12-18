@@ -15,6 +15,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class CashierController implements Initializable {
@@ -23,6 +26,7 @@ public class CashierController implements Initializable {
     public Button addButton;
     public String salesId;
     public String subtotal;
+    Connection connect = new Connection();
 
     ObservableList<ModelTableCashier> oblist = FXCollections.observableArrayList();
     @FXML
@@ -48,6 +52,16 @@ public class CashierController implements Initializable {
 
     public void showTable(){
         // add query yg show itemnya apa aja dari table "sales details"
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM SalesDetails;");
+            ResultSet rs = prepStat.executeQuery();
+
+            while (rs.next()) {
+                oblist.add(new ModelTableCashier())
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

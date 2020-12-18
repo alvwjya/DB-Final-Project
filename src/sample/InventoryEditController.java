@@ -12,12 +12,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class InventoryEditController implements Initializable {
     public TextField productNameField, priceField;
     public String selectedCategory;
     public int productId;
+    Connection connect = new Connection();
 
     ObservableList<ModelTableCategory> oblist = FXCollections.observableArrayList();
     @FXML
@@ -32,7 +36,7 @@ public class InventoryEditController implements Initializable {
         this.productId = productId;
     }
 
-    public void saveButton(){
+    public void saveButton() throws SQLException {
         System.out.println("THIS IS AFTER " + productId); //Check Only
         if (productNameField.getText().isEmpty() || priceField.getText().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -42,9 +46,9 @@ public class InventoryEditController implements Initializable {
             alert.show();
         }
         else{
-            // add query here to edit customer, customernya bisa diambil dari variable customerId, trus yg bisa diganti nama, address, contact, city
-
             getCategory();
+            PreparedStatement prepStat = connect.getPrepStat("UPDATE Inventory SET productName = '" + productNameField.getText() + "', productPrice = " + priceField.getText() + ", categoryId = " + selectedCategory + " WHERE productId = " + productId + ";");
+            prepStat.executeUpdate();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
@@ -61,7 +65,16 @@ public class InventoryEditController implements Initializable {
 
     public void showTable(){
         // add code + query here to fill the table with categoryId, category.
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM Category;");
+            ResultSet rs = prepStat.executeQuery();
 
+            while (rs.next()) {
+                oblist.add(new ModelTableCategory(rs.getInt("categoryId"), rs.getString("category")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getCategoryIndex(){
