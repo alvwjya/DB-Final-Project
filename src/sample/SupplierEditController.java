@@ -9,6 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class SupplierEditController implements Initializable {
@@ -17,6 +20,7 @@ public class SupplierEditController implements Initializable {
     public TextArea supplierAddressField;
     public String selectedCityId;
     public int supplierId;
+    Connection connect = new Connection();
 
     ObservableList<ModelTableCity> oblist = FXCollections.observableArrayList();
     @FXML
@@ -31,7 +35,7 @@ public class SupplierEditController implements Initializable {
         this.supplierId = supplierId;
     }
 
-    public void saveButton(){
+    public void saveButton() throws SQLException {
         System.out.println("THIS IS AFTER " + supplierId); //Check Only
         if (supplierAddressField.getText().isEmpty() || supplierContactField.getText().isEmpty() || supplierNameField.getText().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -42,8 +46,9 @@ public class SupplierEditController implements Initializable {
         }
         else{
             // add query here to edit customer, customernya bisa diambil dari variable customerId, trus yg bisa diganti nama, address, contact, city
-
             getCity();
+            PreparedStatement prepStat = connect.getPrepStat("UPDATE Supplier SET supplierName = '" + supplierNameField.getText() + "', supplierAddress = '" + supplierAddressField.getText() + "', supplierContact = '" + supplierContactField.getText() + "', cityId = " + selectedCityId + " WHERE customerId = " + supplierId + ";");
+            prepStat.executeUpdate();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
@@ -68,7 +73,7 @@ public class SupplierEditController implements Initializable {
         return 0;
     }
 
-    public void preselectCityAndOthers(){
+    public void preselectCityAndOthers() throws SQLException {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -81,11 +86,26 @@ public class SupplierEditController implements Initializable {
         //supplierNameField.setText(); <- ini buat set name field
         //supplierContactField.setText(); <- ini buat set conact field
         //supplierAddressField.setText(); <- ini buat set address field
+        PreparedStatement prepStat = connect.getPrepStat("SELECT supplierName, supplierAddress, supplierContact FROM Supplier WHERE supplierId = " + supplierId + ";");
+        ResultSet rs = prepStat.executeQuery();
+        supplierNameField.setText(rs.getString("supplierName"));
+        supplierAddressField.setText(rs.getString("supplierAddress"));
+        supplierContactField.setText(rs.getString("supplierContact"));
     }
 
 
     public void showTable(){
         // add code + query here to fill the table with cityId, city, and province.
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT cityId, city, province FROM City, Province WHERE City.provinceId = Province.provinceId;");
+            ResultSet rs = prepStat.executeQuery();
+
+            while (rs.next()) {
+                oblist.add(new ModelTableCity(rs.getInt("cityId"), rs.getString("city"), rs.getString("province")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -94,7 +114,11 @@ public class SupplierEditController implements Initializable {
         oblist.add(new ModelTableCity(1, "Bekasi", "JAWA BARAT"));
         oblist.add(new ModelTableCity(2, "Bogor", "JAWA BARAT"));
         showTable();
-        preselectCityAndOthers();
+        try {
+            preselectCityAndOthers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         System.out.println(oblist);
         TableColumn movCol = new TableColumn("City");

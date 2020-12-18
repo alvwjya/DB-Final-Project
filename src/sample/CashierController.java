@@ -33,17 +33,26 @@ public class CashierController implements Initializable {
     private TableView<ModelTableCashier> cashierTable;
 
 
-    public void newSalesButton(){
+    public void newSalesButton() throws SQLException {
         // add query yg mskin customerId, sama "now" date, trus return "salesId"
         // nanti set variable "salesId" dari query tadi.
         // ini link reference: https://stackoverflow.com/questions/11442926/return-a-value-from-an-insert-query-in-mysql
+        PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Sales (customerId, salesDate) VALUES (" + customerIdField.getText() + ", now());");
+        prepStat.executeUpdate();
+        PreparedStatement prepStatSalesId = connect.getPrepStat("SELECT last_insert_id();");
+        ResultSet rs = prepStatSalesId.executeQuery();
+        salesId = rs.getString("last_insert_id");
+
     }
 
-    public void AddButton(){
+    public void AddButton() throws SQLException {
         // tambahin query buat mskin item nya ke "SALES DETAILS" table di database
         // yg dimasukin salesId, productId
         // trus add query yg return harga, and total harga (harga*qty)
         // and also bikin query yg return sum dari totalnya ke subtotal
+        PreparedStatement prepStat = connect.getPrepStat("INSERT INTO SalesDetails (salesId, productId) VALUES (" + salesId + ", " + productIdField.getText() + ");");
+        prepStat.executeUpdate();
+
     }
 
     public void payButton(){
@@ -53,11 +62,11 @@ public class CashierController implements Initializable {
     public void showTable(){
         // add query yg show itemnya apa aja dari table "sales details"
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM SalesDetails;");
+            PreparedStatement prepStat = connect.getPrepStat("SELECT detailId, productName, productPrice,  FROM SalesDetails;");
             ResultSet rs = prepStat.executeQuery();
 
             while (rs.next()) {
-                oblist.add(new ModelTableCashier())
+                oblist.add(new ModelTableCashier(rs.getInt("detailId"), rs.getString()))
             }
         } catch (SQLException e) {
             e.printStackTrace();

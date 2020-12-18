@@ -14,11 +14,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class SupplierController implements Initializable {
 
     public int supplierId;
+    Connection connect = new Connection();
 
     ObservableList<ModelTableSupplier> oblist = FXCollections.observableArrayList();
     @FXML
@@ -63,6 +67,16 @@ public class SupplierController implements Initializable {
 
     public void showTable(){
         // add code + query here to fill the table with supplier details
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT supplierId, supplierName, supplierAddress, city, supplierContact FROM Supplier, City WHERE Supplier.cityId = City.cityId;");
+            ResultSet rs = prepStat.executeQuery();
+
+            while (rs.next()) {
+                oblist.add(new ModelTableSupplier(rs.getInt("supplierId"), rs.getString("supplierName"), rs.getString("supplierAddress"), rs.getString("city"), rs.getString("supplierContact")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void refreshButton(){
