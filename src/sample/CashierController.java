@@ -7,10 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -37,11 +34,20 @@ public class CashierController implements Initializable {
         // add query yg mskin customerId, sama "now" date, trus return "salesId"
         // nanti set variable "salesId" dari query tadi.
         // ini link reference: https://stackoverflow.com/questions/11442926/return-a-value-from-an-insert-query-in-mysql
-        PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Sales (customerId, salesDate) VALUES (" + customerIdField.getText() + ", now());");
-        prepStat.executeUpdate();
-        PreparedStatement prepStatSalesId = connect.getPrepStat("SELECT last_insert_id();");
-        ResultSet rs = prepStatSalesId.executeQuery();
-        salesId = rs.getString("last_insert_id");
+        if (customerIdField.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Something Wrong!");
+            alert.setHeaderText("Check your input");
+            alert.setContentText("Make sure you fill all field with correct value");
+            alert.show();
+        }
+        else {
+            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Sales (customerId, salesDate) VALUES (" + customerIdField.getText() + ", now());");
+            prepStat.executeUpdate();
+            PreparedStatement prepStatSalesId = connect.getPrepStat("SELECT last_insert_id();");
+            ResultSet rs = prepStatSalesId.executeQuery();
+            salesId = rs.getString("last_insert_id");
+        }
 
     }
 
@@ -50,21 +56,57 @@ public class CashierController implements Initializable {
         // yg dimasukin salesId, productId
         // trus add query yg return harga, and total harga (harga*qty)
         // and also bikin query yg return sum dari totalnya ke subtotal
-        PreparedStatement prepStat = connect.getPrepStat("INSERT INTO SalesDetails (salesId, productId, qty, total) VALUES (" + salesId + ", " + productIdField.getText() + ", " + qtyField.getText() + ", (SELECT (productPrice * " + qtyField.getText() + ") FROM Inventory WHERE productId = " + productIdField.getText() + "));");
-        prepStat.executeUpdate();
-        PreparedStatement prepStatDetailId = connect.getPrepStat("SELECT last_insert_id();");
-        ResultSet rs = prepStatDetailId.executeQuery();
-        String detailId = rs.getString("last_insert_id");
-        PreparedStatement prepStatTotal = connect.getPrepStat("SELECT total FROM SalesDetails WHERE detailId = " + detailId + ";");
-        ResultSet rsTotal = prepStatTotal.executeQuery();
-        PreparedStatement prepStatUpdateInventory = connect.getPrepStat("UPDATE Inventory SET productQty = productQty - " + qtyField.getText() + " WHERE productId = " + productIdField.getText() + ";");
-        prepStatUpdateInventory.executeUpdate();
-        subtotal += rsTotal.getInt("total");
-        subtotalField.setText(String.valueOf(subtotal));
+        if (productIdField.getText().isEmpty() || qtyField.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Something Wrong!");
+            alert.setHeaderText("Check your input");
+            alert.setContentText("Make sure you fill all field with correct value");
+            alert.show();
+        }
+        else {
+            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO SalesDetails (salesId, productId, qty, total) VALUES (" + salesId + ", " + productIdField.getText() + ", " + qtyField.getText() + ", (SELECT (productPrice * " + qtyField.getText() + ") FROM Inventory WHERE productId = " + productIdField.getText() + "));");
+            prepStat.executeUpdate();
+            PreparedStatement prepStatDetailId = connect.getPrepStat("SELECT last_insert_id();");
+            ResultSet rs = prepStatDetailId.executeQuery();
+            String detailId = rs.getString("last_insert_id");
+            PreparedStatement prepStatTotal = connect.getPrepStat("SELECT total FROM SalesDetails WHERE detailId = " + detailId + ";");
+            ResultSet rsTotal = prepStatTotal.executeQuery();
+            PreparedStatement prepStatUpdateInventory = connect.getPrepStat("UPDATE Inventory SET productQty = productQty - " + qtyField.getText() + " WHERE productId = " + productIdField.getText() + ";");
+            prepStatUpdateInventory.executeUpdate();
+            subtotal += rsTotal.getInt("total");
+            subtotalField.setText(String.valueOf(subtotal));
+        }
     }
 
-    public void payButton(){
+    public void payButton() throws SQLException {
         // bikin query yg mskin "paid" amount
+        if (payField.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Something Wrong!");
+            alert.setHeaderText("Check your input");
+            alert.setContentText("Make sure you fill all field with correct value");
+            alert.show();
+        }
+        else {
+            PreparedStatement prepStatUpdateSubtotal = connect.getPrepStat("UPDATE Sales SET subTotal = " + subtotal + " WHERE salesId = " + salesId + ";");
+            prepStatUpdateSubtotal.executeUpdate();
+            if (Integer.parseInt(payField.getText()) <= subtotal) {
+                PreparedStatement prepStatPay = connect.getPrepStat("UPDATE Sales SET paid = " + payField.getText() + " WHERE salesId = " + salesId + ";");
+                prepStatPay.executeUpdate();
+                changeField.setText("0");
+            }
+            else {
+                PreparedStatement prepStatPay = connect.getPrepStat("UPDATE Sales SET paid = " + subtotal + " WHERE salesId = " + salesId + ";");
+                prepStatPay.executeUpdate();
+                changeField.setText(String.valueOf(subtotal - Integer.parseInt(payField.getText())));
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setContentText("Payment Successful!");
+            alert.setHeaderText("PAID");
+            alert.show();
+        }
+
     }
 
     public void showTable(){
