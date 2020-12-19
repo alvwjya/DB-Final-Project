@@ -1,9 +1,13 @@
 package sample;
 
 public class ModelTableCashier {
-    private String No, product, price, qty, total;
+    private int No;
+    private int price;
+    private int qty;
+    private int total;
+    private String product;
 
-    public ModelTableCashier(String no, String product, String price, String qty, String total) {
+    public ModelTableCashier(int no, String product, int price, int qty, int total) {
         No = no;
         this.product = product;
         this.price = price;
@@ -11,11 +15,11 @@ public class ModelTableCashier {
         this.total = total;
     }
 
-    public String getNo() {
+    public int getNo() {
         return No;
     }
 
-    public void setNo(String no) {
+    public void setNo(int no) {
         No = no;
     }
 
@@ -27,27 +31,27 @@ public class ModelTableCashier {
         this.product = product;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public String getQty() {
+    public int getQty() {
         return qty;
     }
 
-    public void setQty(String qty) {
+    public void setQty(int qty) {
         this.qty = qty;
     }
 
-    public String getTotal() {
+    public int getTotal() {
         return total;
     }
 
-    public void setTotal(String total) {
+    public void setTotal(int total) {
         this.total = total;
     }
 }
