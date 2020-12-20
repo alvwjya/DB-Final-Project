@@ -9,11 +9,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class FinanceController implements Initializable {
 
     public String date;
+    Connection connect = new Connection();
 
     //Ini buat table "FINANCES"
     ObservableList<ModelTableFinances> oblist1 = FXCollections.observableArrayList();
@@ -30,6 +34,16 @@ public class FinanceController implements Initializable {
 
     public void showFinancesTable(){
         // add query buat isi table "FINANCES"
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT salesDate, sum(paid), sum(restockPrice) FROM Sales, Restock WHERE Sales.salesDate = Restock.restockDate GROUP BY salesDate ORDER BY salesDate;");
+            ResultSet rs = prepStat.executeQuery();
+
+            while (rs.next()) {
+                oblist1.add(new ModelTableFinances(rs.getString("salesDate"), rs.getString("sum(paid)"), rs.getString("sum(restockPrice)")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void getFinancesDetails(){

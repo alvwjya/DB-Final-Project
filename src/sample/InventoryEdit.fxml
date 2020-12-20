@@ -11,7 +11,7 @@
                 <Font name="Arial" size="18.0" />
             </font>
         </Label>
-        <Button layoutX="270.0" layoutY="350.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="60.0" text="SAVE" />
+        <Button layoutX="270.0" layoutY="350.0" mnemonicParsing="false" onAction="#saveButton" prefHeight="35.0" prefWidth="60.0" text="SAVE" />
         <TextField fx:id="productNameField" layoutX="30.0" layoutY="159.0" prefHeight="26.0" prefWidth="195.0" promptText="Product Name" />
         <TextField fx:id="priceField" layoutX="30.0" layoutY="215.0" prefHeight="26.0" prefWidth="195.0" promptText="Price" />
         <TableView fx:id="categoryTable" layoutX="271.0" layoutY="62.0" onMouseClicked="#getCategory" prefHeight="266.0" prefWidth="299.0" />
