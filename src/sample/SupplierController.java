@@ -84,8 +84,11 @@ public class SupplierController implements Initializable {
         showTable();
     }
 
-    public void deleteButton(){
+    public void deleteButton() throws SQLException {
         // add query delete
+        PreparedStatement prepStat = connect.getPrepStat("DELETE FROM Supplier WHERE supplierId = " + supplierId + ";");
+        prepStat.executeUpdate();
+        refreshButton();
     }
 
     @Override

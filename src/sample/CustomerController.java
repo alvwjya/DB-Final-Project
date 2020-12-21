@@ -82,8 +82,11 @@ public class CustomerController implements Initializable {
         showTable();
     }
 
-    public void deleteButton(){
+    public void deleteButton() throws SQLException {
         // add query delete
+        PreparedStatement prepStat = connect.getPrepStat("DELETE FROM Customer WHERE customerId = " + customerId + ";");
+        prepStat.executeUpdate();
+        refreshButton();
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
