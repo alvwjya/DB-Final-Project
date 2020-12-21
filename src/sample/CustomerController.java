@@ -79,10 +79,12 @@ public class CustomerController implements Initializable {
 
     public void refreshButton(){
         customerTable.getItems().clear();
-        customerTable.getColumns().clear();
         showTable();
     }
 
+    public void deleteButton(){
+        // add query delete
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTable();

@@ -81,12 +81,16 @@ public class SupplierController implements Initializable {
 
     public void refreshButton(){
         supplierTable.getItems().clear();
-        supplierTable.getColumns().clear();
         showTable();
+    }
+
+    public void deleteButton(){
+        // add query delete
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        showTable();
 
 
         TableColumn idCol = new TableColumn("ID");

@@ -27,6 +27,7 @@ public class SupplierAddController implements Initializable {
     public void getCity(){
         ModelTableCity city = cityTable.getSelectionModel().getSelectedItem();
         selectedCity = String.valueOf(city.getCityId());
+        System.out.println(selectedCity);
     }
 
     public void saveButton() throws SQLException {

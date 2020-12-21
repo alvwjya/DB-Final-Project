@@ -90,8 +90,11 @@ public class InventoryController implements Initializable {
 
     public void refreshButton(){
         inventoryTable.getItems().clear();
-        inventoryTable.getColumns().clear();
         showTable();
+    }
+
+    public void deleteButton(){
+        // add query delete
     }
 
     @Override
