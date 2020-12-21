@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class CustomerEditController implements Initializable {
+public class CustomerEditController {
 
     public TextField customerNameField, customerContactField;
     public TextArea customerAddressField;
@@ -36,8 +36,6 @@ public class CustomerEditController implements Initializable {
     }
 
     public void saveButton() throws SQLException {
-
-        System.out.println("THIS IS AFTER " + customerId); //Check Only
         if (customerAddressField.getText().isEmpty() || customerContactField.getText().isEmpty() || customerNameField.getText().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Something Wrong!");
@@ -113,21 +111,17 @@ public class CustomerEditController implements Initializable {
     }
 
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    public void loadFirst() {
         try {
             preselectCityAndOthers();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        // This is for test only
-        oblist.add(new ModelTableCity(1, "Bandung", "JAWA BARAT"));
-        oblist.add(new ModelTableCity(2, "Depok", "JAWA BARAT"));
-
         showTable();
+        System.out.println("THIS IS AFTER " + customerId); //Check Only
 
-        System.out.println(oblist);
         TableColumn movCol = new TableColumn("City");
         movCol.setMinWidth(200);
         movCol.setCellValueFactory(

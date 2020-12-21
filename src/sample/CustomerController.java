@@ -53,6 +53,7 @@ public class CustomerController implements Initializable {
             Parent root = loader.load();
             CustomerEditController cController = loader.getController();
             cController.setCustomerId(customerId);
+            cController.loadFirst();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nu Aneka-Edit Customer");
@@ -84,7 +85,7 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        oblist.add(new ModelTableCustomer(1, "KOKO", "IJ", "ju", "binus"));
+        showTable();
 
         TableColumn idCol = new TableColumn("ID");
         idCol.setMinWidth(100);

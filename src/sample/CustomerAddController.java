@@ -81,8 +81,6 @@ public class CustomerAddController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         // This is for test only
-        oblist.add(new ModelTableCity(1, "Bandung", "JAWA BARAT"));
-        oblist.add(new ModelTableCity(2, "Depok", "JAWA BARAT"));
 
         showTable();
 

@@ -87,11 +87,6 @@ public class SupplierController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Test Only
-        oblist.add(new ModelTableSupplier(1, "Zebra", "Jl. Kartini", "Bekasi", "zebra@gmail.com"));
-        oblist.add(new ModelTableSupplier(2, "PT. ANEKA", "Jl. Sudirman", "Jakarta", "085722895406"));
-        oblist.add(new ModelTableSupplier(3, "TOKO SELAMAT", "Jln. Buah Batu", "Bogor", "tokoselamat@ymail.com"));
-
 
 
         TableColumn idCol = new TableColumn("ID");

@@ -96,8 +96,7 @@ public class InventoryController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        oblist.add(new ModelTableInventory(1, "KOKO", "3", "ju", "3000"));
+        showTable();
 
         TableColumn idCol = new TableColumn("ID");
         idCol.setMinWidth(100);

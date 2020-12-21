@@ -111,8 +111,6 @@ public class SupplierEditController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        oblist.add(new ModelTableCity(1, "Bekasi", "JAWA BARAT"));
-        oblist.add(new ModelTableCity(2, "Bogor", "JAWA BARAT"));
         showTable();
         try {
             preselectCityAndOthers();
