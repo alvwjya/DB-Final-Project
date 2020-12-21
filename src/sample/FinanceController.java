@@ -53,6 +53,23 @@ public class FinanceController implements Initializable {
 
     public void showExpensesDetails(){
         // add query buat isi table "EXPENSES DETAILS" berdasarkan date yg udh di pilih dari "FINANCES" table
+        try {
+            PreparedStatement prepStat = connect.getPrepStat("SELECT salesDate, paid FROM Sales WHERE salesDate = " + date + ";");
+            ResultSet rs = prepStat.executeQuery();
+            PreparedStatement prepStatRestock = connect.getPrepStat("SELECT restockDate, restockPrice FROM Restock WHERE restockDate = " + date + ";");
+            ResultSet rsRestock = prepStatRestock.executeQuery();
+
+            while (rs.next()) {
+                oblist2.add(new ModelTableExpensesDetails(rs.getString("salesDate"), "Sales Income", rs.getString("paid")));
+            }
+
+            while (rsRestock.next()) {
+                oblist2.add(new ModelTableExpensesDetails(rsRestock.getString("restockDate"), "Restock Expenses", rsRestock.getString("restockPrice")));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
