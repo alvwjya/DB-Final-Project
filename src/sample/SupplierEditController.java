@@ -88,9 +88,6 @@ public class SupplierEditController implements Initializable {
         //supplierAddressField.setText(); <- ini buat set address field
         PreparedStatement prepStat = connect.getPrepStat("SELECT supplierName, supplierAddress, supplierContact FROM Supplier WHERE supplierId = " + supplierId + ";");
         ResultSet rs = prepStat.executeQuery();
-        supplierNameField.setText(rs.getString("supplierName"));
-        supplierAddressField.setText(rs.getString("supplierAddress"));
-        supplierContactField.setText(rs.getString("supplierContact"));
     }
 
 

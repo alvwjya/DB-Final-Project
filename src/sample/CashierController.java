@@ -112,7 +112,7 @@ public class CashierController implements Initializable {
     public void showTable(){
         // add query yg show itemnya apa aja dari table "sales details"`A
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT detailId, productName, productPrice, qty, total FROM SalesDetails, Inventory WHERE SalesDetails.productId = Inventory.productId;");
+            PreparedStatement prepStat = connect.getPrepStat("SELECT detailId, productName, productPrice, qty, total FROM SalesDetails, Inventory WHERE SalesDetails.productId = " + salesId);
             ResultSet rs = prepStat.executeQuery();
 
             while (rs.next()) {
