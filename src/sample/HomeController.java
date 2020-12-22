@@ -28,12 +28,7 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            AnchorPane anch1 = FXMLLoader.load(getClass().getResource("Cashier.fxml"));
-            cashier.setContent(anch1);
-        } catch (IOException ex) {
-            System.out.println("File not found!");
-        }
+
 
         try {
             AnchorPane anch2 = FXMLLoader.load(getClass().getResource("Customer.fxml"));
