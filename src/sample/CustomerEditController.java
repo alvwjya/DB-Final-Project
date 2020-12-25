@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -48,6 +49,8 @@ public class CustomerEditController {
             getCity();
             PreparedStatement prepStat = connect.getPrepStat("UPDATE Customer SET customerName = '" + customerNameField.getText() + "', customerAddress = '" + customerAddressField.getText() + "', customerContact = '" + customerContactField.getText() + "', cityId = " + selectedCityId + " WHERE customerId = " + customerId + ";");
             prepStat.executeUpdate();
+            Stage closeWindow = (Stage) customerNameField.getScene().getWindow();
+            closeWindow.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
@@ -65,13 +68,25 @@ public class CustomerEditController {
 
 
 
-        public int getCityIndex(){
+        public int getCityIndex() throws SQLException {
+        int cityId = 0;
+        try{
+            PreparedStatement prepStat = connect.getPrepStat("SELECT cityId FROM Customer WHERE CustomerId = " + customerId + ";");
+            ResultSet rs = prepStat.executeQuery();
+            if(rs.next()){
+                cityId = rs.getInt("cityId");
+            }
             for (int i = 0; i < cityTable.getItems().size(); i++) {
-                if (cityTable.getItems().get(i).getCityId() == 1) { // <- ini '==' nya diliat dari database, bikin query yg return cityId customer
+                if (cityTable.getItems().get(i).getCityId() == cityId) {
                     return i;
                 }
             }
             return 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        }
+
     }
 
     public void preselectCityAndOthers() throws SQLException {
@@ -79,20 +94,21 @@ public class CustomerEditController {
             @Override
             public void run() {
                 cityTable.requestFocus();
-                cityTable.getSelectionModel().select(getCityIndex());
-                cityTable.getFocusModel().focus(getCityIndex());
+                try {
+                    cityTable.getSelectionModel().select(getCityIndex());
+                    cityTable.getFocusModel().focus(getCityIndex());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         });
-
-        //Add query yg return customer address, name, and contact berdasarkan customerId yg udh dipilih.
-        //customerAddressField.setText(); <- ini buat set address field
-        //customerContactField.setText(); <- ini buat set contact field
-        //customerNameField.setText(); <- ini buat set name field
         PreparedStatement prepStat = connect.getPrepStat("SELECT customerName, customerAddress, customerContact FROM Customer WHERE customerId = " + customerId + ";");
         ResultSet rs = prepStat.executeQuery();
-        customerNameField.setText(rs.getString("customerName"));
-        customerAddressField.setText(rs.getString("customerAddress"));
-        customerContactField.setText(rs.getString("customerContact"));
+        if(rs.next()){
+            customerNameField.setText(rs.getString("customerName"));
+            customerAddressField.setText(rs.getString("customerAddress"));
+            customerContactField.setText(rs.getString("customerContact"));
+        }
     }
 
 

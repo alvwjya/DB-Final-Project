@@ -7,6 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,6 +18,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
@@ -83,11 +86,29 @@ public class CustomerController implements Initializable {
     }
 
     public void deleteButton() throws SQLException {
-        // add query delete
-        PreparedStatement prepStat = connect.getPrepStat("DELETE FROM Customer WHERE customerId = " + customerId + ";");
-        prepStat.executeUpdate();
-        refreshButton();
+        try {
+            // show confirmation of deletion
+            Alert alert4 = new Alert(Alert.AlertType.CONFIRMATION);
+            alert4.setTitle("Confirmation");
+            alert4.setContentText("This will remove it permanently from the database.");
+            alert4.setHeaderText("Are you sure want to delete this product?");
+            Optional<ButtonType> result = alert4.showAndWait();
+
+            // If user press "OK" button
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                PreparedStatement prepStat = connect.getPrepStat("DELETE FROM Customer WHERE customerId = " + customerId + ";");
+                prepStat.executeUpdate();
+                customerId = 0;
+                refreshButton();
+            } else {
+                alert4.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTable();
