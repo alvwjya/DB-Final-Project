@@ -9,6 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -40,8 +41,10 @@ public class InventoryNewItemController implements Initializable {
         }
         else{
             getCategory();
-            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Inventory (productName, categoryId, productPrice) VALUES ('" + productNameField.getText() + "', " + selectedCategory + ", " + priceField.getText() + ");");
+            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Inventory (productName, categoryId, productQty, productPrice) VALUES ('" + productNameField.getText() + "', " + selectedCategory + ", 0, " + priceField.getText() + ");");
             prepStat.executeUpdate();
+            Stage closeWindow = (Stage) productNameField.getScene().getWindow();
+            closeWindow.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");

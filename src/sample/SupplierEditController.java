@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -14,7 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class SupplierEditController implements Initializable {
+public class SupplierEditController {
 
     public TextField supplierNameField, supplierContactField;
     public TextArea supplierAddressField;
@@ -45,10 +46,11 @@ public class SupplierEditController implements Initializable {
             alert.show();
         }
         else{
-            // add query here to edit customer, customernya bisa diambil dari variable customerId, trus yg bisa diganti nama, address, contact, city
             getCity();
-            PreparedStatement prepStat = connect.getPrepStat("UPDATE Supplier SET supplierName = '" + supplierNameField.getText() + "', supplierAddress = '" + supplierAddressField.getText() + "', supplierContact = '" + supplierContactField.getText() + "', cityId = " + selectedCityId + " WHERE customerId = " + supplierId + ";");
+            PreparedStatement prepStat = connect.getPrepStat("UPDATE Supplier SET supplierName = '" + supplierNameField.getText() + "', supplierAddress = '" + supplierAddressField.getText() + "', supplierContact = '" + supplierContactField.getText() + "', cityId = " + selectedCityId + " WHERE supplierId = " + supplierId + ";");
             prepStat.executeUpdate();
+            Stage closeWindow = (Stage) supplierNameField.getScene().getWindow();
+            closeWindow.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
@@ -56,21 +58,27 @@ public class SupplierEditController implements Initializable {
             alert.show();
 
         }
-
-        // This is for test only
-        System.out.println(supplierAddressField.getText());
-        System.out.println(supplierContactField.getText());
-        System.out.println(supplierNameField.getText());
-        System.out.println(selectedCityId);
     }
 
-    public int getCityIndex(){
-        for (int i = 0; i < cityTable.getItems().size(); i++) {
-            if (cityTable.getItems().get(i).getCityId() == 1) { // <- ini '==' nya diliat dari database, bikin query yg return cityId nya supplier
-                return i;
+    public int getCityIndex() throws SQLException {
+        int cityId = 0;
+        try{
+            PreparedStatement prepStat = connect.getPrepStat("SELECT cityId FROM Supplier WHERE supplierId = " + supplierId + ";");
+            ResultSet rs = prepStat.executeQuery();
+            if(rs.next()){
+                cityId = rs.getInt("cityId");
             }
+            for (int i = 0; i < cityTable.getItems().size(); i++) {
+                if (cityTable.getItems().get(i).getCityId() == cityId) {
+                    return i;
+                }
+            }
+            return 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
         }
-        return 0;
+
     }
 
     public void preselectCityAndOthers() throws SQLException {
@@ -78,16 +86,21 @@ public class SupplierEditController implements Initializable {
             @Override
             public void run() {
                 cityTable.requestFocus();
-                cityTable.getSelectionModel().select(getCityIndex());
-                cityTable.getFocusModel().focus(getCityIndex());
+                try {
+                    cityTable.getSelectionModel().select(getCityIndex());
+                    cityTable.getFocusModel().focus(getCityIndex());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         });
-        // add query yg return name, contact, address supplier dari supplierId yg udh diselect
-        //supplierNameField.setText(); <- ini buat set name field
-        //supplierContactField.setText(); <- ini buat set conact field
-        //supplierAddressField.setText(); <- ini buat set address field
         PreparedStatement prepStat = connect.getPrepStat("SELECT supplierName, supplierAddress, supplierContact FROM Supplier WHERE supplierId = " + supplierId + ";");
         ResultSet rs = prepStat.executeQuery();
+        if(rs.next()){
+            supplierNameField.setText(rs.getString("supplierName"));
+            supplierAddressField.setText(rs.getString("supplierAddress"));
+            supplierContactField.setText(rs.getString("supplierContact"));
+        }
     }
 
 
@@ -106,8 +119,7 @@ public class SupplierEditController implements Initializable {
     }
 
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void loadFirst() {
         showTable();
         try {
             preselectCityAndOthers();

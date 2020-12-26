@@ -25,8 +25,10 @@ public class InventoryNewSupplyController {
         } else {
             PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Restock (supplierId, productId, restockDate, restockPrice) VALUES (" + supplierIdField.getText() + ", " + productIdField.getText() + ", now(), " + priceField.getText() + ");");
             prepStat.executeUpdate();
-            PreparedStatement prepStatUpdate = connect.getPrepStat("UPDATE Inventory SET productQty = " + qtyField.getText() + " WHERE productId = " + productIdField.getText() + ";");
+            PreparedStatement prepStatUpdate = connect.getPrepStat("UPDATE Inventory SET productQty = productQty + " + qtyField.getText() + " WHERE productId = " + productIdField.getText() + ";");
             prepStatUpdate.executeUpdate();
+            Stage closeWindow = (Stage) productIdField.getScene().getWindow();
+            closeWindow.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");

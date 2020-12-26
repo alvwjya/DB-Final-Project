@@ -45,7 +45,6 @@ public class CustomerEditController {
             alert.show();
         }
         else{
-            // add query here to edit customer, customernya bisa diambil dari variable customerId, trus yg bisa diganti nama, address, contact, city
             getCity();
             PreparedStatement prepStat = connect.getPrepStat("UPDATE Customer SET customerName = '" + customerNameField.getText() + "', customerAddress = '" + customerAddressField.getText() + "', customerContact = '" + customerContactField.getText() + "', cityId = " + selectedCityId + " WHERE customerId = " + customerId + ";");
             prepStat.executeUpdate();

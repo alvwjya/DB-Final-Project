@@ -55,6 +55,7 @@ public class SupplierController implements Initializable {
             Parent root = loader.load();
             SupplierEditController sController = loader.getController();
             sController.setSupplierId(supplierId);
+            sController.loadFirst();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nu Aneka-Edit Supplier");

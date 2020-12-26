@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -41,6 +42,8 @@ public class SupplierAddController implements Initializable {
         else {
             PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Supplier (supplierName, supplierAddress, cityId, supplierContact) VALUES ('" + supplierNameField.getText() + "', '" + supplierAddressField.getText() + "', " + selectedCity + ", '" + supplierContactField.getText() + "');");
             prepStat.executeUpdate();
+            Stage closeWindow = (Stage) supplierNameField.getScene().getWindow();
+            closeWindow.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");

@@ -88,11 +88,11 @@ public class CustomerController implements Initializable {
     public void deleteButton() throws SQLException {
         try {
             // show confirmation of deletion
-            Alert alert4 = new Alert(Alert.AlertType.CONFIRMATION);
-            alert4.setTitle("Confirmation");
-            alert4.setContentText("This will remove it permanently from the database.");
-            alert4.setHeaderText("Are you sure want to delete this product?");
-            Optional<ButtonType> result = alert4.showAndWait();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setContentText("This will remove it permanently from the database.");
+            alert.setHeaderText("Are you sure want to delete this product?");
+            Optional<ButtonType> result = alert.showAndWait();
 
             // If user press "OK" button
             if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -101,7 +101,7 @@ public class CustomerController implements Initializable {
                 customerId = 0;
                 refreshButton();
             } else {
-                alert4.close();
+                alert.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();

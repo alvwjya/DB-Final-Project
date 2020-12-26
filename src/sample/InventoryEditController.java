@@ -10,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -17,7 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class InventoryEditController implements Initializable {
+public class InventoryEditController {
     public TextField productNameField, priceField;
     public String selectedCategory;
     public int productId;
@@ -49,6 +50,8 @@ public class InventoryEditController implements Initializable {
             getCategory();
             PreparedStatement prepStat = connect.getPrepStat("UPDATE Inventory SET productName = '" + productNameField.getText() + "', productPrice = " + priceField.getText() + ", categoryId = " + selectedCategory + " WHERE productId = " + productId + ";");
             prepStat.executeUpdate();
+            Stage closeWindow = (Stage) productNameField.getScene().getWindow();
+            closeWindow.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
@@ -64,7 +67,6 @@ public class InventoryEditController implements Initializable {
     }
 
     public void showTable(){
-        // add code + query here to fill the table with categoryId, category.
         try {
             PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM Category;");
             ResultSet rs = prepStat.executeQuery();
@@ -77,34 +79,56 @@ public class InventoryEditController implements Initializable {
         }
     }
 
-    public int getCategoryIndex(){
-        for (int i = 0; i < categoryTable.getItems().size(); i++) {
-            if (categoryTable.getItems().get(i).getCategoryId() == 1) { // <- ini '==' nya diliat dari database, bikin query yg return categoryId
-                return i;
+    public int getCategoryIndex() throws SQLException {
+        int categoryId = 0;
+        try{
+            PreparedStatement prepStat = connect.getPrepStat("SELECT categoryId FROM Inventory WHERE productId = " + productId + ";");
+            ResultSet rs = prepStat.executeQuery();
+            if(rs.next()){
+                categoryId = rs.getInt("categoryId");
             }
+            for (int i = 0; i < categoryTable.getItems().size(); i++) {
+                if (categoryTable.getItems().get(i).getCategoryId() == categoryId) {
+                    return i;
+                }
+            }
+            return 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
         }
-        return 0;
+
     }
 
-    public void preselectCategoryAndOthers(){
+    public void preselectCategoryAndOthers() throws SQLException {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 categoryTable.requestFocus();
-                categoryTable.getSelectionModel().select(getCategoryIndex());
-                categoryTable.getFocusModel().focus(getCategoryIndex());
+                try {
+                    categoryTable.getSelectionModel().select(getCategoryIndex());
+                    categoryTable.getFocusModel().focus(getCategoryIndex());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         });
-
-        // Add query yg return product name, sama price dari productId
-        //productNameField.setText(); <- Ini buat set product name textfield
-        //priceField.setText(); <- Ini buat set price textfield
+        PreparedStatement prepStat = connect.getPrepStat("SELECT productName, productPrice FROM Inventory WHERE productId = " + productId + ";");
+        ResultSet rs = prepStat.executeQuery();
+        if(rs.next()){
+            productNameField.setText(rs.getString("productName"));
+            priceField.setText(rs.getString("productPrice"));
+        }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    public void loadFirst() {
         showTable();
-        preselectCategoryAndOthers();
+        try {
+            preselectCategoryAndOthers();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
         TableColumn idCol = new TableColumn("ID");
         idCol.setMinWidth(50);
