@@ -44,18 +44,16 @@ public class CashierController implements Initializable {
         else {
             PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Sales (customerId, salesDate) VALUES (" + customerIdField.getText() + ", now());");
             prepStat.executeUpdate();
-            PreparedStatement prepStatSalesId = connect.getPrepStat("SELECT last_insert_id();");
+            PreparedStatement prepStatSalesId = connect.getPrepStat("SELECT LAST_INSERT_ID();");
             ResultSet rs = prepStatSalesId.executeQuery();
-            salesId = rs.getString("last_insert_id");
+            if(rs.next()){
+                salesId = String.valueOf(rs.getInt(1));
+            }
         }
-
+        System.out.println(salesId);
     }
 
     public void AddButton() throws SQLException {
-        // tambahin query buat mskin item nya ke "SALES DETAILS" table di database
-        // yg dimasukin salesId, productId
-        // trus add query yg return harga, and total harga (harga*qty)
-        // and also bikin query yg return sum dari totalnya ke subtotal
         if (productIdField.getText().isEmpty() || qtyField.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Something Wrong!");
@@ -64,18 +62,31 @@ public class CashierController implements Initializable {
             alert.show();
         }
         else {
-            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO SalesDetails (salesId, productId, qty, total) VALUES (" + salesId + ", " + productIdField.getText() + ", " + qtyField.getText() + ", (SELECT (productPrice * " + qtyField.getText() + ") FROM Inventory WHERE productId = " + productIdField.getText() + "));");
-            prepStat.executeUpdate();
-            PreparedStatement prepStatDetailId = connect.getPrepStat("SELECT last_insert_id();");
-            ResultSet rs = prepStatDetailId.executeQuery();
-            String detailId = rs.getString("last_insert_id");
-            PreparedStatement prepStatTotal = connect.getPrepStat("SELECT total FROM SalesDetails WHERE detailId = " + detailId + ";");
-            ResultSet rsTotal = prepStatTotal.executeQuery();
-            PreparedStatement prepStatUpdateInventory = connect.getPrepStat("UPDATE Inventory SET productQty = productQty - " + qtyField.getText() + " WHERE productId = " + productIdField.getText() + ";");
-            prepStatUpdateInventory.executeUpdate();
-            subtotal += rsTotal.getInt("total");
-            subtotalField.setText(String.valueOf(subtotal));
+            PreparedStatement prepStatCheck = connect.getPrepStat("SELECT productQty FROM Inventory WHERE productId = " + productIdField.getText() + ";");
+            ResultSet rsc = prepStatCheck.executeQuery();
+            if(rsc.next()){
+                if(rsc.getInt("productQty") < Integer.parseInt(qtyField.getText())){
+                    System.out.println("PRODUK KURANG");
+                } else{
+                    PreparedStatement prepStat = connect.getPrepStat("INSERT INTO SalesDetails (salesId, productId, qty, total) VALUES (" + salesId + ", " + productIdField.getText() + ", " + qtyField.getText() + ", (SELECT (productPrice * " + qtyField.getText() + ") FROM Inventory WHERE productId = " + productIdField.getText() + "));");
+                    prepStat.executeUpdate();
+
+                    PreparedStatement prepStatTotal = connect.getPrepStat("SELECT SUM(total) FROM SalesDetails WHERE salesId = " + salesId + ";");
+                    ResultSet rsTotal = prepStatTotal.executeQuery();
+                    while(rsTotal.next()){
+                        subtotal = rsTotal.getInt(1);
+                    }
+
+                    PreparedStatement prepStatUpdateInventory = connect.getPrepStat("UPDATE Inventory SET productQty = productQty - " + qtyField.getText() + " WHERE productId = " + productIdField.getText() + ";");
+                    prepStatUpdateInventory.executeUpdate();
+                    subtotalField.setText(String.valueOf(subtotal));
+                    qtyField.clear();
+                    productIdField.clear();
+                }
+            }
+
         }
+        showTable();
     }
 
     public void payButton() throws SQLException {
@@ -98,25 +109,35 @@ public class CashierController implements Initializable {
             else {
                 PreparedStatement prepStatPay = connect.getPrepStat("UPDATE Sales SET paid = " + subtotal + " WHERE salesId = " + salesId + ";");
                 prepStatPay.executeUpdate();
-                changeField.setText(String.valueOf(subtotal - Integer.parseInt(payField.getText())));
+                changeField.setText(String.valueOf(Integer.parseInt(payField.getText()) - subtotal));
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Payment Successful!");
             alert.setHeaderText("PAID");
-            alert.show();
+            alert.showAndWait();
+            cashierTable.getItems().clear();
+            subtotalField.clear();
+            changeField.clear();
+            qtyField.clear();
+            productIdField.clear();
+            customerIdField.clear();
+            payField.clear();
         }
 
     }
 
     public void showTable(){
-        // add query yg show itemnya apa aja dari table "sales details"`A
+        cashierTable.getItems().clear();
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT detailId, productName, productPrice, qty, total FROM SalesDetails, Inventory WHERE SalesDetails.productId = " + salesId);
+            //PreparedStatement prepStat = connect.getPrepStat("SELECT productName, productPrice, qty, total FROM SalesDetails, " +
+                    //"Inventory WHERE SalesDetails.productId = " + salesId + "AND Inventory.productName = " + );
+
+            PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM SalesDetails INNER JOIN Inventory ON SalesDetails.productId = Inventory.productId WHERE SalesDetails.salesId = " + salesId + ";");
             ResultSet rs = prepStat.executeQuery();
 
             while (rs.next()) {
-                oblist.add(new ModelTableCashier(rs.getInt("detailId"), rs.getString("productName"), rs.getInt("productPrice"), rs.getInt("qty"), rs.getInt("total")));
+                oblist.add(new ModelTableCashier(rs.getString("Inventory.productName"), rs.getInt("Inventory.productPrice"), rs.getInt("salesDetails.qty"), rs.getInt("salesDetails.total")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -125,31 +146,24 @@ public class CashierController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        showTable();
-
-        TableColumn idCol = new TableColumn("No.");
-        idCol.setMinWidth(50);
-        idCol.setCellValueFactory(
-                new PropertyValueFactory<ModelTableCashier, Integer>("number"));
         TableColumn nameCol = new TableColumn("Product");
         nameCol.setMinWidth(250);
         nameCol.setCellValueFactory(
-                new PropertyValueFactory<ModelTableCashier, String>("productName"));
+                new PropertyValueFactory<ModelTableCashier, String>("product"));
         TableColumn addressCol = new TableColumn("Price");
         addressCol.setMinWidth(235);
         addressCol.setCellValueFactory(
-                new PropertyValueFactory<ModelTableCashier, Integer>("productPrice"));
+                new PropertyValueFactory<ModelTableCashier, Integer>("price"));
         TableColumn cityCol = new TableColumn("Qty.");
         cityCol.setMinWidth(50);
         cityCol.setCellValueFactory(
-                new PropertyValueFactory<ModelTableCashier, Integer>("productQty"));
+                new PropertyValueFactory<ModelTableCashier, Integer>("qty"));
         TableColumn contactCol = new TableColumn("Total");
         contactCol.setMinWidth(235);
         contactCol.setCellValueFactory(
                 new PropertyValueFactory<ModelTableCashier, Integer>("total"));
         cashierTable.setItems(oblist);
-        cashierTable.getColumns().addAll(idCol, nameCol, addressCol, cityCol, contactCol);
+        cashierTable.getColumns().addAll( nameCol, addressCol, cityCol, contactCol);
 
     }
 }

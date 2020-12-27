@@ -8,7 +8,11 @@
    <children>
       <TabPane layoutY="121.0" prefHeight="680.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-
+            <Tab fx:id="cashier" text="Cashier">
+                <content>
+                    <fx:include source="Cashier.fxml" />
+                </content>
+            </Tab>
           <Tab fx:id="customer" text="Customer">
             <content>
                 <fx:include source="Customer.fxml" />

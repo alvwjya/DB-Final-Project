@@ -1,26 +1,16 @@
 package sample;
 
 public class ModelTableCashier {
-    private int No;
     private int price;
     private int qty;
     private int total;
     private String product;
 
-    public ModelTableCashier(int no, String product, int price, int qty, int total) {
-        No = no;
+    public ModelTableCashier(String product, int price, int qty, int total) {
         this.product = product;
         this.price = price;
         this.qty = qty;
         this.total = total;
-    }
-
-    public int getNo() {
-        return No;
-    }
-
-    public void setNo(int no) {
-        No = no;
     }
 
     public String getProduct() {

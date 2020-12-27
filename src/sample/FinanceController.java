@@ -32,39 +32,69 @@ public class FinanceController implements Initializable {
     private TableView<ModelTableExpensesDetails> expensesDetailsTable;
 
 
-    public void showFinancesTable(){
-        // add query buat isi table "FINANCES"
-        try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT salesDate, sum(paid), sum(restockPrice) FROM Sales, Restock WHERE Sales.salesDate = Restock.restockDate GROUP BY salesDate ORDER BY salesDate;");
-            ResultSet rs = prepStat.executeQuery();
 
+
+
+    public void showFinancesTable(){
+        PreparedStatement preparedStat = connect.getPrepStat("SELECT salesDate FROM sales UNION SELECT restockDate FROM Restock;");
+        try {
+            ResultSet rs = preparedStat.executeQuery();
+            while(rs.next()){
+                calcSales(rs.getString(1));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
+    public void calcSales(String date){
+        PreparedStatement prepStat = connect.getPrepStat("SELECT (SELECT COALESCE(SUM(paid),0) FROM Sales WHERE salesDate = DATE('" + date + "')), (SELECT COALESCE(SUM(restockPrice),0) FROM restock WHERE restockDate = DATE('" + date + "')); ");
+
+        try {
+            ResultSet rs = prepStat.executeQuery();
+            if(rs.next()){
+                oblist1.add(new ModelTableFinances(date, rs.getString(1), rs.getString(2)));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+
+    /*public void showFinancesTable(){
+        try {
+
+
+            PreparedStatement prepStat = connect.getPrepStat("SELECT restockDate or salesDate, SUM(Sales.paid), SUM(Restock.restockPrice) FROM Sales, Restock GROUP BY DATE(salesDate), DATE(restockDate);");
+            ResultSet rs = prepStat.executeQuery();
             while (rs.next()) {
-                oblist1.add(new ModelTableFinances(rs.getString("salesDate"), rs.getString("sum(paid)"), rs.getString("sum(restockPrice)")));
+                oblist1.add(new ModelTableFinances(rs.getString(1), rs.getString(2), rs.getString(3)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void getFinancesDetails(){
+        expensesDetailsTable.getItems().clear();
         ModelTableFinances customer = financesTable.getSelectionModel().getSelectedItem();
         date = customer.getDate();
+        System.out.println(date);
+        showExpensesDetails();
     }
 
     public void showExpensesDetails(){
-        // add query buat isi table "EXPENSES DETAILS" berdasarkan date yg udh di pilih dari "FINANCES" table
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT salesDate, paid FROM Sales WHERE salesDate = " + date + ";");
+            PreparedStatement prepStat = connect.getPrepStat("SELECT salesDate, paid FROM Sales WHERE salesDate = DATE('" + date + "');");
             ResultSet rs = prepStat.executeQuery();
-            PreparedStatement prepStatRestock = connect.getPrepStat("SELECT restockDate, restockPrice FROM Restock WHERE restockDate = " + date + ";");
+            PreparedStatement prepStatRestock = connect.getPrepStat("SELECT restockDate, restockPrice FROM Restock WHERE restockDate = DATE('" + date + "');");
             ResultSet rsRestock = prepStatRestock.executeQuery();
-
             while (rs.next()) {
-                oblist2.add(new ModelTableExpensesDetails(rs.getString("salesDate"), "Sales Income", rs.getString("paid")));
+                oblist2.add(new ModelTableExpensesDetails(rs.getString(1), "Sales Income", rs.getString(2)));
             }
-
             while (rsRestock.next()) {
-                oblist2.add(new ModelTableExpensesDetails(rsRestock.getString("restockDate"), "Restock Expenses", rsRestock.getString("restockPrice")));
+                oblist2.add(new ModelTableExpensesDetails(rsRestock.getString(1), "Restock Expenses", rsRestock.getString(2)));
             }
 
         } catch (SQLException e) {
@@ -88,6 +118,7 @@ public class FinanceController implements Initializable {
         expensesCol.setMinWidth(150);
         expensesCol.setCellValueFactory(
                 new PropertyValueFactory<ModelTableFinances, String>("expenses"));
+        financesTable.setItems(oblist1);
         financesTable.getColumns().addAll(dateCol, incomeCol, expensesCol);
 
         TableColumn dateCol2 = new TableColumn("Date");
@@ -102,6 +133,7 @@ public class FinanceController implements Initializable {
         amountCol.setMinWidth(150);
         amountCol.setCellValueFactory(
                 new PropertyValueFactory<ModelTableExpensesDetails, String>("expenses"));
+        expensesDetailsTable.setItems(oblist2);
         expensesDetailsTable.getColumns().addAll(dateCol2, detailCol, amountCol);
 
     }

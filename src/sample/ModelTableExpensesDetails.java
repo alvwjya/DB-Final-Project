@@ -1,12 +1,12 @@
 package sample;
 
 public class ModelTableExpensesDetails {
-    private String date, detail, amount;
+    private String date, detail, expenses;
 
-    public ModelTableExpensesDetails(String date, String detail, String amount) {
+    public ModelTableExpensesDetails(String date, String detail, String expenses) {
         this.date = date;
         this.detail = detail;
-        this.amount = amount;
+        this.expenses = expenses;
     }
 
     public String getDate() {
@@ -25,11 +25,11 @@ public class ModelTableExpensesDetails {
         this.detail = detail;
     }
 
-    public String getAmount() {
-        return amount;
+    public String getExpenses() {
+        return expenses;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public void setExpenses(String expenses) {
+        this.expenses = expenses;
     }
 }
