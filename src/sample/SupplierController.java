@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,6 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,6 +18,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class SupplierController implements Initializable {
@@ -25,33 +27,36 @@ public class SupplierController implements Initializable {
     Connection connect = new Connection();
 
     ObservableList<ModelTableSupplier> oblist = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableSupplier> supplierTable;
 
-    public void addSupplierButton(){
-        try{
-            FXMLLoader loader= new FXMLLoader(getClass().getResource("SupplierAdd.fxml"));
+
+    public void addSupplierButton() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SupplierAdd.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nu Aneka-New Supplier");
+
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getSupplierId(){
+
+    public void getSupplierId() {
         ModelTableSupplier supplier = supplierTable.getSelectionModel().getSelectedItem();
         supplierId = supplier.getSupplierId();
-        System.out.println("THIS IS BEFORE " + supplierId); //Check Only
-
     }
 
-    public void editButton(){
-        try{
-            FXMLLoader loader= new FXMLLoader(getClass().getResource("SupplierEdit.fxml"));
+
+    public void editButton() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SupplierEdit.fxml"));
             Parent root = loader.load();
             SupplierEditController sController = loader.getController();
             sController.setSupplierId(supplierId);
@@ -59,43 +64,64 @@ public class SupplierController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nu Aneka-Edit Supplier");
-            stage.show();
 
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void showTable(){
-        // add code + query here to fill the table with supplier details
+
+    public void showTable() {
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT supplierId, supplierName, supplierAddress, city, supplierContact FROM Supplier, City WHERE Supplier.cityId = City.cityId;");
+            PreparedStatement prepStat = connect.getPrepStat("SELECT supplierId, supplierName, supplierAddress, city, supplierContact " +
+                    "FROM Supplier, City WHERE Supplier.cityId = City.cityId;");
             ResultSet rs = prepStat.executeQuery();
 
             while (rs.next()) {
-                oblist.add(new ModelTableSupplier(rs.getInt("supplierId"), rs.getString("supplierName"), rs.getString("supplierAddress"), rs.getString("city"), rs.getString("supplierContact")));
+                oblist.add(new ModelTableSupplier(rs.getInt("supplierId"), rs.getString("supplierName"),
+                        rs.getString("supplierAddress"), rs.getString("city"), rs.getString("supplierContact")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void refreshButton(){
+
+    public void refreshButton() {
         supplierTable.getItems().clear();
         showTable();
     }
 
+
     public void deleteButton() throws SQLException {
-        // add query delete
-        PreparedStatement prepStat = connect.getPrepStat("DELETE FROM Supplier WHERE supplierId = " + supplierId + ";");
-        prepStat.executeUpdate();
-        refreshButton();
+        try {
+            // show confirmation of deletion
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setContentText("This will remove it permanently from the database.");
+            alert.setHeaderText("Are you sure want to delete this supplier?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            // If user press "OK" button
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                PreparedStatement prepStat = connect.getPrepStat("DELETE FROM Supplier WHERE supplierId = " + supplierId + ";");
+                prepStat.executeUpdate();
+                supplierId = 0;
+                refreshButton();
+            } else {
+                alert.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTable();
-
 
         TableColumn idCol = new TableColumn("ID");
         idCol.setMinWidth(100);
@@ -120,5 +146,4 @@ public class SupplierController implements Initializable {
         supplierTable.setItems(oblist);
         supplierTable.getColumns().addAll(idCol, nameCol, addressCol, cityCol, contactCol);
     }
-
 }

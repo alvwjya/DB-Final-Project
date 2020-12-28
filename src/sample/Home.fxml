@@ -35,7 +35,7 @@
             </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="859.0" layoutY="14.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="126.0" style="-fx-background-color: gainsboro;" text="LOGOUT">
+      <Button fx:id="logoutButton" layoutX="859.0" layoutY="14.0" mnemonicParsing="false" onAction="#logoutButton" prefHeight="45.0" prefWidth="126.0" style="-fx-background-color: gainsboro;" text="LOGOUT">
          <font>
             <Font name="Arial" size="14.0" />
          </font>

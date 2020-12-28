@@ -27,12 +27,14 @@ public class CustomerController implements Initializable {
     Connection connect = new Connection();
 
     ObservableList<ModelTableCustomer> oblist = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableCustomer> customerTable;
 
-    public void addCustomerButton(){
-        try{
-            FXMLLoader loader= new FXMLLoader(getClass().getResource("CustomerAdd.fxml"));
+
+    public void addCustomerButton() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerAdd.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
@@ -44,15 +46,16 @@ public class CustomerController implements Initializable {
         }
     }
 
-    public void getCustomerId(){
+
+    public void getCustomerId() {
         ModelTableCustomer customer = customerTable.getSelectionModel().getSelectedItem();
         customerId = customer.getCustomerId();
-        System.out.println("THIS IS BEFORE "  + customerId); //Check Only
     }
 
-    public void editButton(){
-        try{
-            FXMLLoader loader= new FXMLLoader(getClass().getResource("CustomerEdit.fxml"));
+
+    public void editButton() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerEdit.fxml"));
             Parent root = loader.load();
             CustomerEditController cController = loader.getController();
             cController.setCustomerId(customerId);
@@ -60,14 +63,15 @@ public class CustomerController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nu Aneka-Edit Customer");
+
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void showTable(){
-        // add code + query here to fill the table with customer details
+
+    public void showTable() {
         try {
             PreparedStatement prepStat = connect.getPrepStat("SELECT customerId, customerName, customerAddress, city, customerContact FROM Customer, City WHERE Customer.cityId = City.cityId;");
             ResultSet rs = prepStat.executeQuery();
@@ -80,10 +84,11 @@ public class CustomerController implements Initializable {
         }
     }
 
-    public void refreshButton(){
+    public void refreshButton() {
         customerTable.getItems().clear();
         showTable();
     }
+
 
     public void deleteButton() throws SQLException {
         try {
@@ -91,7 +96,8 @@ public class CustomerController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation");
             alert.setContentText("This will remove it permanently from the database.");
-            alert.setHeaderText("Are you sure want to delete this product?");
+            alert.setHeaderText("Are you sure want to delete this customer?");
+
             Optional<ButtonType> result = alert.showAndWait();
 
             // If user press "OK" button

@@ -19,10 +19,8 @@ public class FinanceController implements Initializable {
     public String date;
     Connection connect = new Connection();
 
-    //Ini buat table "FINANCES"
-    ObservableList<ModelTableFinances> oblist1 = FXCollections.observableArrayList();
 
-    //Ini buat table "EXPENSES DETAILS"
+    ObservableList<ModelTableFinances> oblist1 = FXCollections.observableArrayList();
     ObservableList<ModelTableExpensesDetails> oblist2 = FXCollections.observableArrayList();
 
     @FXML
@@ -32,66 +30,53 @@ public class FinanceController implements Initializable {
     private TableView<ModelTableExpensesDetails> expensesDetailsTable;
 
 
-
-
-
-    public void showFinancesTable(){
+    public void showFinancesTable() {
         PreparedStatement preparedStat = connect.getPrepStat("SELECT salesDate FROM sales UNION SELECT restockDate FROM Restock;");
         try {
             ResultSet rs = preparedStat.executeQuery();
-            while(rs.next()){
-                calcSales(rs.getString(1));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-    }
-
-    public void calcSales(String date){
-        PreparedStatement prepStat = connect.getPrepStat("SELECT (SELECT COALESCE(SUM(paid),0) FROM Sales WHERE salesDate = DATE('" + date + "')), (SELECT COALESCE(SUM(restockPrice),0) FROM restock WHERE restockDate = DATE('" + date + "')); ");
-
-        try {
-            ResultSet rs = prepStat.executeQuery();
-            if(rs.next()){
-                oblist1.add(new ModelTableFinances(date, rs.getString(1), rs.getString(2)));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-
-    /*public void showFinancesTable(){
-        try {
-
-
-            PreparedStatement prepStat = connect.getPrepStat("SELECT restockDate or salesDate, SUM(Sales.paid), SUM(Restock.restockPrice) FROM Sales, Restock GROUP BY DATE(salesDate), DATE(restockDate);");
-            ResultSet rs = prepStat.executeQuery();
             while (rs.next()) {
-                oblist1.add(new ModelTableFinances(rs.getString(1), rs.getString(2), rs.getString(3)));
+                PreparedStatement prepStat = connect.getPrepStat(
+                        "SELECT (SELECT COALESCE(SUM(paid),0) " +
+                        "FROM Sales WHERE salesDate = DATE('" + rs.getString(1) + "')), " +
+                        "(SELECT COALESCE(SUM(restockPrice),0) " +
+                        "FROM restock WHERE restockDate = DATE('" + rs.getString(1) + "')); ");
+                    ResultSet rsD = prepStat.executeQuery();
+                    if (rsD.next()) {
+                        oblist1.add(new ModelTableFinances(rs.getString(1), rsD.getString(1), rsD.getString(2)));
+                    }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-    }*/
+    }
 
-    public void getFinancesDetails(){
+    public void refreshButton(){
+        date = null;
+        financesTable.getItems().clear();
+        showFinancesTable();
         expensesDetailsTable.getItems().clear();
-        ModelTableFinances customer = financesTable.getSelectionModel().getSelectedItem();
-        date = customer.getDate();
-        System.out.println(date);
         showExpensesDetails();
     }
 
-    public void showExpensesDetails(){
+
+    public void getFinancesDetails() {
+        expensesDetailsTable.getItems().clear();
+        ModelTableFinances customer = financesTable.getSelectionModel().getSelectedItem();
+        date = customer.getDate();
+        showExpensesDetails();
+    }
+
+
+    public void showExpensesDetails() {
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT salesDate, paid FROM Sales WHERE salesDate = DATE('" + date + "');");
-            ResultSet rs = prepStat.executeQuery();
-            PreparedStatement prepStatRestock = connect.getPrepStat("SELECT restockDate, restockPrice FROM Restock WHERE restockDate = DATE('" + date + "');");
+            PreparedStatement prepStat = connect.getPrepStat("SELECT salesDate, paid FROM " +
+                    "Sales WHERE salesDate = DATE('" + date + "');");
+            PreparedStatement prepStatRestock = connect.getPrepStat("SELECT restockDate, restockPrice FROM " +
+                    "Restock WHERE restockDate = DATE('" + date + "');");
+            ResultSet rsIncome = prepStat.executeQuery();
             ResultSet rsRestock = prepStatRestock.executeQuery();
-            while (rs.next()) {
-                oblist2.add(new ModelTableExpensesDetails(rs.getString(1), "Sales Income", rs.getString(2)));
+            while (rsIncome.next()) {
+                oblist2.add(new ModelTableExpensesDetails(rsIncome.getString(1), "Sales Income", rsIncome.getString(2)));
             }
             while (rsRestock.next()) {
                 oblist2.add(new ModelTableExpensesDetails(rsRestock.getString(1), "Restock Expenses", rsRestock.getString(2)));
@@ -102,10 +87,11 @@ public class FinanceController implements Initializable {
         }
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         showFinancesTable();
+
         TableColumn dateCol = new TableColumn("Date");
         dateCol.setMinWidth(130);
         dateCol.setCellValueFactory(
@@ -121,6 +107,7 @@ public class FinanceController implements Initializable {
         financesTable.setItems(oblist1);
         financesTable.getColumns().addAll(dateCol, incomeCol, expensesCol);
 
+
         TableColumn dateCol2 = new TableColumn("Date");
         dateCol2.setMinWidth(130);
         dateCol2.setCellValueFactory(
@@ -135,6 +122,5 @@ public class FinanceController implements Initializable {
                 new PropertyValueFactory<ModelTableExpensesDetails, String>("expenses"));
         expensesDetailsTable.setItems(oblist2);
         expensesDetailsTable.getColumns().addAll(dateCol2, detailCol, amountCol);
-
     }
 }

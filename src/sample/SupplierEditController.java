@@ -4,16 +4,13 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ResourceBundle;
 
 public class SupplierEditController {
 
@@ -24,48 +21,55 @@ public class SupplierEditController {
     Connection connect = new Connection();
 
     ObservableList<ModelTableCity> oblist = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableCity> cityTable;
 
-    public void getCity(){
+
+    public void getCity() {
         ModelTableCity city = cityTable.getSelectionModel().getSelectedItem();
         selectedCityId = String.valueOf(city.getCityId());
     }
 
-    public void setSupplierId(Integer supplierId){
-        this.supplierId = supplierId;
-    }
+
+    public void setSupplierId(Integer supplierId) { this.supplierId = supplierId; }
+
 
     public void saveButton() throws SQLException {
-        System.out.println("THIS IS AFTER " + supplierId); //Check Only
-        if (supplierAddressField.getText().isEmpty() || supplierContactField.getText().isEmpty() || supplierNameField.getText().isEmpty()){
+        if (supplierAddressField.getText().isEmpty() || supplierContactField.getText().isEmpty() || supplierNameField.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Something Wrong!");
             alert.setHeaderText("Check your input");
             alert.setContentText("Make sure you fill all field with correct value");
+
             alert.show();
-        }
-        else{
+        } else {
             getCity();
-            PreparedStatement prepStat = connect.getPrepStat("UPDATE Supplier SET supplierName = '" + supplierNameField.getText() + "', supplierAddress = '" + supplierAddressField.getText() + "', supplierContact = '" + supplierContactField.getText() + "', cityId = " + selectedCityId + " WHERE supplierId = " + supplierId + ";");
+            PreparedStatement prepStat = connect.getPrepStat("UPDATE Supplier SET supplierName = '" + supplierNameField.getText() +
+                    "', supplierAddress = '" + supplierAddressField.getText() + "', supplierContact = '" + supplierContactField.getText() +
+                    "', cityId = " + selectedCityId + " WHERE supplierId = " + supplierId + ";");
             prepStat.executeUpdate();
             Stage closeWindow = (Stage) supplierNameField.getScene().getWindow();
             closeWindow.close();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
             alert.setHeaderText("SAVED");
-            alert.show();
 
+            alert.show();
         }
     }
 
+
     public int getCityIndex() throws SQLException {
         int cityId = 0;
-        try{
+
+        try {
             PreparedStatement prepStat = connect.getPrepStat("SELECT cityId FROM Supplier WHERE supplierId = " + supplierId + ";");
             ResultSet rs = prepStat.executeQuery();
-            if(rs.next()){
+
+            if (rs.next()) {
                 cityId = rs.getInt("cityId");
             }
             for (int i = 0; i < cityTable.getItems().size(); i++) {
@@ -80,6 +84,7 @@ public class SupplierEditController {
         }
 
     }
+
 
     public void preselectCityAndOthers() throws SQLException {
         Platform.runLater(new Runnable() {
@@ -96,7 +101,8 @@ public class SupplierEditController {
         });
         PreparedStatement prepStat = connect.getPrepStat("SELECT supplierName, supplierAddress, supplierContact FROM Supplier WHERE supplierId = " + supplierId + ";");
         ResultSet rs = prepStat.executeQuery();
-        if(rs.next()){
+
+        if (rs.next()) {
             supplierNameField.setText(rs.getString("supplierName"));
             supplierAddressField.setText(rs.getString("supplierAddress"));
             supplierContactField.setText(rs.getString("supplierContact"));
@@ -104,8 +110,7 @@ public class SupplierEditController {
     }
 
 
-    public void showTable(){
-        // add code + query here to fill the table with cityId, city, and province.
+    public void showTable() {
         try {
             PreparedStatement prepStat = connect.getPrepStat("SELECT cityId, city, province FROM City, Province WHERE City.provinceId = Province.provinceId;");
             ResultSet rs = prepStat.executeQuery();
@@ -121,13 +126,13 @@ public class SupplierEditController {
 
     public void loadFirst() {
         showTable();
+
         try {
             preselectCityAndOthers();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        System.out.println(oblist);
         TableColumn movCol = new TableColumn("City");
         movCol.setMinWidth(200);
         movCol.setCellValueFactory(

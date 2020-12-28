@@ -15,19 +15,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginController {
+
     public Button loginButton;
     public TextField usernameField;
     public PasswordField passwordField;
     Connection connect = new Connection();
 
+
     public void loginButton() throws SQLException {
-        PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM Employee WHERE username = '" + usernameField.getText() + "' AND pass = '" + passwordField.getText() + "';");
+        PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM Employee WHERE username = '" + usernameField.getText() +
+                "' AND password = '" + passwordField.getText() + "';");
         ResultSet rs = prepStat.executeQuery();
+
         if (!rs.next()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Something Wrong!");
-            alert.setHeaderText("Wrong Username or Password!");
-            alert.setContentText("Make sure you input the right info!");
+            alert.setHeaderText("Wrong Credentials!");
+            alert.setContentText("Check your input or contact administrator");
+
+            alert.show();
 
         } else {
             try {
@@ -37,15 +43,14 @@ public class LoginController {
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.setTitle("Nu Aneka");
+
                 stage.show();
+
                 Stage closeWindow = (Stage) loginButton.getScene().getWindow();
                 closeWindow.close();
             } catch (IOException e){
                 System.out.println("File not found!");
             }
         }
-
-
-
     }
 }

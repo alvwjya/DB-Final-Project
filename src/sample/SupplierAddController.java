@@ -22,8 +22,10 @@ public class SupplierAddController implements Initializable {
     Connection connect = new Connection();
 
     ObservableList<ModelTableCity> oblist = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableCity> cityTable;
+
 
     public void getCity(){
         ModelTableCity city = cityTable.getSelectionModel().getSelectedItem();
@@ -31,29 +33,34 @@ public class SupplierAddController implements Initializable {
         System.out.println(selectedCity);
     }
 
+
     public void saveButton() throws SQLException {
         if (supplierNameField.getText().isEmpty() || supplierAddressField.getText().isEmpty() || supplierContactField.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Something Wrong!");
             alert.setHeaderText("Check your input");
             alert.setContentText("Make sure you fill all field with correct value");
+
             alert.show();
         }
         else {
-            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Supplier (supplierName, supplierAddress, cityId, supplierContact) VALUES ('" + supplierNameField.getText() + "', '" + supplierAddressField.getText() + "', " + selectedCity + ", '" + supplierContactField.getText() + "');");
+            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Supplier (supplierName, supplierAddress, cityId, supplierContact) " +
+                    "VALUES ('" + supplierNameField.getText() + "', '" + supplierAddressField.getText() + "', " + selectedCity + ", '" + supplierContactField.getText() + "');");
             prepStat.executeUpdate();
             Stage closeWindow = (Stage) supplierNameField.getScene().getWindow();
             closeWindow.close();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
             alert.setHeaderText("SAVED");
+
             alert.show();
         }
     }
 
+
     public void showTable(){
-        // add code + query here to fill the table with cityId, city, and province.
         try {
             PreparedStatement prepStat = connect.getPrepStat("SELECT cityId, city, province FROM City, Province WHERE City.provinceId = Province.provinceId;");
             ResultSet rs = prepStat.executeQuery();
@@ -66,11 +73,11 @@ public class SupplierAddController implements Initializable {
         }
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         showTable();
-        System.out.println(oblist);
+
         TableColumn cityCol = new TableColumn("City");
         cityCol.setMinWidth(200);
         cityCol.setCellValueFactory(

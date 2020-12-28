@@ -22,12 +22,15 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class InventoryController implements Initializable {
+
     public int productId;
     Connection connect = new Connection();
 
     ObservableList<ModelTableInventory> oblist = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableInventory> inventoryTable;
+
 
     public void newSupplyButton(){
         try{
@@ -43,6 +46,7 @@ public class InventoryController implements Initializable {
         }
     }
 
+
     public void newItemButton(){
         try{
             FXMLLoader loader= new FXMLLoader(getClass().getResource("InventoryNewItem.fxml"));
@@ -56,6 +60,7 @@ public class InventoryController implements Initializable {
             e.printStackTrace();
         }
     }
+
 
     public void editButton(){
         try{
@@ -73,29 +78,34 @@ public class InventoryController implements Initializable {
         }
     }
 
+
     public void getProductId(){
         ModelTableInventory inventory = inventoryTable.getSelectionModel().getSelectedItem();
         productId = inventory.getProductId();
-        System.out.println("THIS IS BEFORE " + productId); //Check Only
     }
+
 
     public void showTable(){
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT productId, productName, productQty, category, productPrice FROM Inventory, Category WHERE Inventory.categoryId = Category.categoryId;");
+            PreparedStatement prepStat = connect.getPrepStat("SELECT productId, productName, productQty, category, productPrice " +
+                    "FROM Inventory, Category WHERE Inventory.categoryId = Category.categoryId;");
             ResultSet rs = prepStat.executeQuery();
 
             while (rs.next()) {
-                oblist.add(new ModelTableInventory(rs.getInt("productId"), rs.getString("productName"), rs.getString("productQty"), rs.getString("category"), rs.getString("productPrice")));
+                oblist.add(new ModelTableInventory(rs.getInt("productId"), rs.getString("productName"),
+                        rs.getString("productQty"), rs.getString("category"), rs.getString("productPrice")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+
     public void refreshButton(){
         inventoryTable.getItems().clear();
         showTable();
     }
+
 
     public void deleteButton() throws SQLException {
         try {
@@ -120,6 +130,7 @@ public class InventoryController implements Initializable {
         }
         refreshButton();
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -147,6 +158,5 @@ public class InventoryController implements Initializable {
                 new PropertyValueFactory<ModelTableInventory, String>("productPrice"));
         inventoryTable.setItems(oblist);
         inventoryTable.getColumns().addAll(idCol, nameCol, qtyCol, catCol, priceCol);
-
     }
 }

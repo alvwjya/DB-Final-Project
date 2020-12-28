@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,30 +11,33 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ResourceBundle;
 
 public class InventoryEditController {
+
     public TextField productNameField, priceField;
     public String selectedCategory;
     public int productId;
     Connection connect = new Connection();
 
     ObservableList<ModelTableCategory> oblist = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableCategory> categoryTable;
+
 
     public void getCategory(){
         ModelTableCategory category = categoryTable.getSelectionModel().getSelectedItem();
         selectedCategory = String.valueOf(category.getCategoryId());
     }
 
+
     public void setProductId(Integer productId){
         this.productId = productId;
     }
+
 
     public void saveButton() throws SQLException {
         System.out.println("THIS IS AFTER " + productId); //Check Only
@@ -45,26 +47,22 @@ public class InventoryEditController {
             alert.setHeaderText("Check your input");
             alert.setContentText("Make sure you fill all field with correct value");
             alert.show();
-        }
-        else{
+        } else{
             getCategory();
             PreparedStatement prepStat = connect.getPrepStat("UPDATE Inventory SET productName = '" + productNameField.getText() + "', productPrice = " + priceField.getText() + ", categoryId = " + selectedCategory + " WHERE productId = " + productId + ";");
             prepStat.executeUpdate();
             Stage closeWindow = (Stage) productNameField.getScene().getWindow();
             closeWindow.close();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
             alert.setHeaderText("SAVED");
+
             alert.show();
-
         }
-
-        // This is for test only
-        System.out.println(priceField.getText());
-        System.out.println(productNameField.getText());
-        System.out.println(selectedCategory);
     }
+
 
     public void showTable(){
         try {
@@ -79,14 +77,18 @@ public class InventoryEditController {
         }
     }
 
+
     public int getCategoryIndex() throws SQLException {
         int categoryId = 0;
+
         try{
             PreparedStatement prepStat = connect.getPrepStat("SELECT categoryId FROM Inventory WHERE productId = " + productId + ";");
             ResultSet rs = prepStat.executeQuery();
+
             if(rs.next()){
                 categoryId = rs.getInt("categoryId");
             }
+
             for (int i = 0; i < categoryTable.getItems().size(); i++) {
                 if (categoryTable.getItems().get(i).getCategoryId() == categoryId) {
                     return i;
@@ -97,8 +99,8 @@ public class InventoryEditController {
             throwables.printStackTrace();
             return 0;
         }
-
     }
+
 
     public void preselectCategoryAndOthers() throws SQLException {
         Platform.runLater(new Runnable() {
@@ -115,6 +117,7 @@ public class InventoryEditController {
         });
         PreparedStatement prepStat = connect.getPrepStat("SELECT productName, productPrice FROM Inventory WHERE productId = " + productId + ";");
         ResultSet rs = prepStat.executeQuery();
+
         if(rs.next()){
             productNameField.setText(rs.getString("productName"));
             priceField.setText(rs.getString("productPrice"));
@@ -124,6 +127,7 @@ public class InventoryEditController {
 
     public void loadFirst() {
         showTable();
+
         try {
             preselectCategoryAndOthers();
         } catch (SQLException throwables) {

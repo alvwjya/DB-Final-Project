@@ -23,43 +23,45 @@ public class InventoryNewItemController implements Initializable {
     Connection connect = new Connection();
 
     ObservableList<ModelTableCategory> oblist = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableCategory> categoryTable;
+
 
     public void getCategory(){
         ModelTableCategory category = categoryTable.getSelectionModel().getSelectedItem();
         selectedCategory = String.valueOf(category.getCategoryId());
     }
 
+
     public void saveButton() throws SQLException {
+
         if (productNameField.getText().isEmpty() || priceField.getText().isEmpty() || selectedCategory.equals("")){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Something Wrong!");
             alert.setHeaderText("Check your input");
             alert.setContentText("Make sure you fill all field with correct value");
+
             alert.show();
-        }
-        else{
+        } else{
             getCategory();
-            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Inventory (productName, categoryId, productQty, productPrice) VALUES ('" + productNameField.getText() + "', " + selectedCategory + ", 0, " + priceField.getText() + ");");
+            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Inventory (productName, categoryId, productQty, productPrice)" +
+                    " VALUES ('" + productNameField.getText() + "', " + selectedCategory + ", 0, " + priceField.getText() + ");");
             prepStat.executeUpdate();
             Stage closeWindow = (Stage) productNameField.getScene().getWindow();
             closeWindow.close();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
             alert.setHeaderText("SAVED");
+
             alert.show();
         }
-
-        // This is for test only
-        System.out.println(productNameField.getText());
-        System.out.println(priceField.getText());
-        System.out.println(selectedCategory);
     }
 
+
     public void showTable(){
-        // add code + query here to fill the table with categoryId, category.
         try {
             PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM Category;");
             ResultSet rs = prepStat.executeQuery();
@@ -72,10 +74,10 @@ public class InventoryNewItemController implements Initializable {
         }
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTable();
-
 
         TableColumn idCol = new TableColumn("ID");
         idCol.setMinWidth(50);

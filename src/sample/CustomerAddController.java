@@ -22,26 +22,25 @@ public class CustomerAddController implements Initializable {
     public Connection connect = new Connection();
 
     ObservableList<ModelTableCity> oblist = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ModelTableCity> cityTable;
 
-    public void getCity(){
+
+    public void getCity() {
         ModelTableCity city = cityTable.getSelectionModel().getSelectedItem();
         selectedCity = String.valueOf(city.getCityId());
     }
 
+
     public void saveButton() throws SQLException {
-
-
-        if (customerAddressField.getText().isEmpty() || customerContactField.getText().isEmpty() || customerNameField.getText().isEmpty() || (selectedCity.equals(""))){
+        if (customerAddressField.getText().isEmpty() || customerContactField.getText().isEmpty() || customerNameField.getText().isEmpty() || (selectedCity.equals(""))) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Something Wrong!");
             alert.setHeaderText("Check your input");
             alert.setContentText("Make sure you fill all field with correct value");
             alert.show();
-        }
-        else{
-            // add query here to add customer
+        } else {
             PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Customer (customerName, customerAddress, cityId, customerContact) VALUES ('" + customerNameField.getText() + "', '" + customerAddressField.getText() + "', " + selectedCity + ", '" + customerContactField.getText() + "');");
             prepStat.executeUpdate();
             Stage closeWindow = (Stage) customerNameField.getScene().getWindow();
@@ -50,25 +49,16 @@ public class CustomerAddController implements Initializable {
             alert.setTitle("Info");
             alert.setContentText("Save Successful!");
             alert.setHeaderText("SAVED");
+
             alert.show();
         }
-
-        // This is for test only
-        System.out.println(customerAddressField.getText());
-        System.out.println(customerContactField.getText());
-        System.out.println(customerNameField.getText());
-        System.out.println(selectedCity);
-
-
-
     }
 
-    public void showTable(){
-        // add code + query here to fill the table with cityId, city, and province.
+
+    public void showTable() {
         try {
             PreparedStatement prepStat = connect.getPrepStat("SELECT cityId, city, province FROM City, Province WHERE City.provinceId = Province.provinceId;");
             ResultSet rs = prepStat.executeQuery();
-
             while (rs.next()) {
                 oblist.add(new ModelTableCity(rs.getInt("cityId"), rs.getString("city"), rs.getString("province")));
             }
@@ -78,15 +68,9 @@ public class CustomerAddController implements Initializable {
     }
 
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        // This is for test only
-
         showTable();
-
 
         TableColumn cityCol = new TableColumn("City");
         cityCol.setMinWidth(200);
