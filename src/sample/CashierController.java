@@ -36,7 +36,8 @@ public class CashierController implements Initializable {
 
             alert.show();
         } else {
-            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Sales (customerId, salesDate) VALUES (" + customerIdField.getText() + ", now());");
+            PreparedStatement prepStat = connect.getPrepStat("INSERT INTO Sales (customerId, salesDate) VALUES (" +
+                    customerIdField.getText() + ", now());");
             prepStat.executeUpdate();
             PreparedStatement prepStatSalesId = connect.getPrepStat("SELECT LAST_INSERT_ID();");
             ResultSet rs = prepStatSalesId.executeQuery();
@@ -77,17 +78,22 @@ public class CashierController implements Initializable {
 
                     alert.show();
                 } else {
-                    PreparedStatement prepStat = connect.getPrepStat("INSERT INTO SalesDetails (salesId, productId, qty, total) VALUES (" + salesId + ", " + productIdField.getText() + ", " + qtyField.getText() + ", (SELECT (productPrice * " + qtyField.getText() + ") FROM Inventory WHERE productId = " + productIdField.getText() + "));");
+                    PreparedStatement prepStat = connect.getPrepStat("INSERT INTO SalesDetails (salesId, " +
+                            "productId, qty, total) VALUES (" + salesId + ", " + productIdField.getText() + ", " +
+                            qtyField.getText() + ", (SELECT (productPrice * " + qtyField.getText() + ") FROM Inventory" +
+                            " WHERE productId = " + productIdField.getText() + "));");
                     prepStat.executeUpdate();
 
-                    PreparedStatement prepStatTotal = connect.getPrepStat("SELECT SUM(total) FROM SalesDetails WHERE salesId = " + salesId + ";");
+                    PreparedStatement prepStatTotal = connect.getPrepStat("SELECT SUM(total) FROM SalesDetails " +
+                            "WHERE salesId = " + salesId + ";");
                     ResultSet rsTotal = prepStatTotal.executeQuery();
 
                     while (rsTotal.next()) {
                         subtotal = rsTotal.getInt(1);
                     }
 
-                    PreparedStatement prepStatUpdateInventory = connect.getPrepStat("UPDATE Inventory SET productQty = productQty - " + qtyField.getText() + " WHERE productId = " + productIdField.getText() + ";");
+                    PreparedStatement prepStatUpdateInventory = connect.getPrepStat("UPDATE Inventory SET " +
+                            "productQty = productQty - " + qtyField.getText() + " WHERE productId = " + productIdField.getText() + ";");
                     prepStatUpdateInventory.executeUpdate();
                     subtotalField.setText(String.valueOf(subtotal));
                     qtyField.clear();
@@ -107,15 +113,18 @@ public class CashierController implements Initializable {
 
             alert.show();
         } else {
-            PreparedStatement prepStatUpdateSubtotal = connect.getPrepStat("UPDATE Sales SET subTotal = " + subtotal + " WHERE salesId = " + salesId + ";");
+            PreparedStatement prepStatUpdateSubtotal = connect.getPrepStat("UPDATE Sales SET subTotal = " +
+                    subtotal + " WHERE salesId = " + salesId + ";");
             prepStatUpdateSubtotal.executeUpdate();
 
             if (Integer.parseInt(payField.getText()) <= subtotal) {
-                PreparedStatement prepStatPay = connect.getPrepStat("UPDATE Sales SET paid = " + payField.getText() + " WHERE salesId = " + salesId + ";");
+                PreparedStatement prepStatPay = connect.getPrepStat("UPDATE Sales SET paid = " + payField.getText() +
+                        " WHERE salesId = " + salesId + ";");
                 prepStatPay.executeUpdate();
                 changeField.setText("0");
             } else {
-                PreparedStatement prepStatPay = connect.getPrepStat("UPDATE Sales SET paid = " + subtotal + " WHERE salesId = " + salesId + ";");
+                PreparedStatement prepStatPay = connect.getPrepStat("UPDATE Sales SET paid = " + subtotal +
+                        " WHERE salesId = " + salesId + ";");
                 prepStatPay.executeUpdate();
                 changeField.setText(String.valueOf(Integer.parseInt(payField.getText()) - subtotal));
             }
@@ -141,11 +150,14 @@ public class CashierController implements Initializable {
     public void showTable() {
         cashierTable.getItems().clear();
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM SalesDetails INNER JOIN Inventory ON SalesDetails.productId = Inventory.productId WHERE SalesDetails.salesId = " + salesId + ";");
+            PreparedStatement prepStat = connect.getPrepStat("SELECT * FROM SalesDetails INNER JOIN " +
+                    "Inventory ON SalesDetails.productId = Inventory.productId WHERE SalesDetails.salesId = " + salesId + ";");
             ResultSet rs = prepStat.executeQuery();
 
             while (rs.next()) {
-                oblist.add(new ModelTableCashier(rs.getString("Inventory.productName"), rs.getInt("Inventory.productPrice"), rs.getInt("salesDetails.qty"), rs.getInt("salesDetails.total")));
+                oblist.add(new ModelTableCashier(rs.getString("Inventory.productName"),
+                        rs.getInt("Inventory.productPrice"), rs.getInt("salesDetails.qty"),
+                        rs.getInt("salesDetails.total")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

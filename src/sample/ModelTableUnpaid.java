@@ -1,13 +1,22 @@
 package sample;
 
 public class ModelTableUnpaid {
-    String customerId, salesDate, subTotal, paid;
+    String salesId, customerId, salesDate, subTotal, paid;
 
-    public ModelTableUnpaid(String customerId, String salesDate, String subTotal, String paid) {
+    public ModelTableUnpaid(String salesId, String customerId, String salesDate, String subTotal, String paid) {
+        this.salesId = salesId;
         this.customerId = customerId;
         this.salesDate = salesDate;
         this.subTotal = subTotal;
         this.paid = paid;
+    }
+
+    public String getSalesId() {
+        return salesId;
+    }
+
+    public void setSalesId(String salesId) {
+        this.salesId = salesId;
     }
 
     public String getCustomerId() {
