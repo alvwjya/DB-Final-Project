@@ -3,10 +3,14 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -58,6 +62,19 @@ public class FinanceController implements Initializable {
         showExpensesDetails();
     }
 
+    public void unpaidButton(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Unpaid.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Nu Aneka-Unpaid Customer");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void getFinancesDetails() {
         expensesDetailsTable.getItems().clear();
@@ -86,6 +103,7 @@ public class FinanceController implements Initializable {
             e.printStackTrace();
         }
     }
+
 
 
     @Override

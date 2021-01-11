@@ -23,5 +23,10 @@
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
+      <Button layoutX="50.0" layoutY="568.0" mnemonicParsing="false" onAction="#unpaidButton" prefHeight="40.0" prefWidth="125.0" text="UNPAID">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>

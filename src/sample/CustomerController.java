@@ -73,11 +73,13 @@ public class CustomerController implements Initializable {
 
     public void showTable() {
         try {
-            PreparedStatement prepStat = connect.getPrepStat("SELECT customerId, customerName, customerAddress, city, customerContact FROM Customer, City WHERE Customer.cityId = City.cityId;");
+            PreparedStatement prepStat = connect.getPrepStat("SELECT customerId, customerName, customerAddress, city, " +
+                    "customerContact FROM Customer, City WHERE Customer.cityId = City.cityId;");
             ResultSet rs = prepStat.executeQuery();
 
             while (rs.next()) {
-                oblist.add(new ModelTableCustomer(rs.getInt("customerId"), rs.getString("customerName"), rs.getString("customerAddress"), rs.getString("city"), rs.getString("customerContact")));
+                oblist.add(new ModelTableCustomer(rs.getInt("customerId"), rs.getString("customerName"),
+                        rs.getString("customerAddress"), rs.getString("city"), rs.getString("customerContact")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
