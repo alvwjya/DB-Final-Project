@@ -28,7 +28,7 @@ public class UnpaidController implements Initializable {
     public void showUnpaidTable(){
         try{
             PreparedStatement prepStat = connect.getPrepStat("SELECT salesId, customerId, salesDate, subTotal, " +
-                    "paid FROM Sales WHERE paid != subTotal");
+                    "paid FROM Sales WHERE paid != subTotal;");
             ResultSet rs = prepStat.executeQuery();
 
             while (rs.next()) {
