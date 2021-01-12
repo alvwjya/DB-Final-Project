@@ -78,8 +78,8 @@ public class FinanceController implements Initializable {
 
     public void getFinancesDetails() {
         expensesDetailsTable.getItems().clear();
-        ModelTableFinances customer = financesTable.getSelectionModel().getSelectedItem();
-        date = customer.getDate();
+        ModelTableFinances retDate = financesTable.getSelectionModel().getSelectedItem();
+        date = retDate.getDate();
         showExpensesDetails();
     }
 
